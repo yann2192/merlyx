@@ -1,34 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-struct eax0
-{
-    unsigned int lsfns; /* Largest Standard Function Number Supported */
-    char vendor[13];
-};
-
-typedef struct eax0 EAX0;
-
-struct eax1
-{
-    unsigned short stepping;
-    unsigned short model;
-    unsigned short family;
-    unsigned short cputype;
-    unsigned int extendedmodel;
-    unsigned int extendedfamily;
-};
-
-typedef struct eax1 EAX1;
-
-struct cpuid_info
-{
-    EAX0 info1;
-    EAX1 info2;
-};
-
-typedef struct cpuid_info * CPUID_INFO;
+#include "cpuinfo.h"
 
 static void getVendor(EAX0 * res)
 {
@@ -96,12 +66,4 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info)
     }
     fprintf(f, "Extended model : %i\n", info->info2.extendedmodel);
     fprintf(f, "Extended family : %i\n", info->info2.extendedfamily);
-}
-
-int main(int argc, const char *argv[])
-{
-    CPUID_INFO info = CPUID_INFO_create();
-    CPUID_INFO_fprintf(stdout, info);
-    CPUID_INFO_free(info);
-    return 0;
 }
