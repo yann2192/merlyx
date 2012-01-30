@@ -1,8 +1,8 @@
 #include "cpuinfo.h"
 
-static void getVendor(EAX0 * res)
+void getVendor(EAX0 * res)
 {
-    int * t = (int *)res->vendor;
+    unsigned int * t = (unsigned int *)res->vendor;
     asm("xor %%rax, %%rax\n"
         "cpuid\n"
         "mov %%eax, %0\n"
@@ -16,9 +16,9 @@ static void getVendor(EAX0 * res)
     res->vendor[12] = '\0';
 }
 
-static void getProcessorInfo(EAX1 * res)
+void getProcessorInfo(EAX1 * res)
 {
-    int e[4];
+    unsigned int e[4];
     asm("mov $1, %%rax\n"
         "cpuid\n"
         "mov %%eax, %0\n"

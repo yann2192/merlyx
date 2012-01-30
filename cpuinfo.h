@@ -32,9 +32,9 @@ struct cpuid_info
 
 typedef struct cpuid_info * CPUID_INFO;
 
-static void getVendor(EAX0 *);
+void getVendor(EAX0 *);
 
-static void getProcessorInfo(EAX1 *);
+void getProcessorInfo(EAX1 *);
 
 CPUID_INFO CPUID_INFO_create();
 
