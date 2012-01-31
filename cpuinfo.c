@@ -3,7 +3,7 @@
 void getVendor(EAX0 * res)
 {
     unsigned int * t = (unsigned int *)res->vendor;
-    asm("xor %%rax, %%rax\n"
+    asm("xor %%eax, %%eax\n"
         "cpuid\n"
         "mov %%eax, %0\n"
         "mov %%ebx, %1\n"
@@ -19,7 +19,7 @@ void getVendor(EAX0 * res)
 void getProcessorInfo(EAX1 * res)
 {
     unsigned int e[4];
-    asm("mov $1, %%rax\n"
+    asm("mov $1, %%eax\n"
         "cpuid\n"
         "mov %%eax, %0\n"
         "mov %%ebx, %1\n"
