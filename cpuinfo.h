@@ -17,7 +17,7 @@ struct eax1
     unsigned char stepping;
     unsigned char model;
     unsigned char family;
-    unsigned char cputype;
+    char * cputype;
     unsigned char extendedmodel;
     unsigned short extendedfamily;
 
@@ -89,7 +89,7 @@ typedef struct eax1 EAX1;
 
 struct eax2
 {
-    unsigned char caches[15]; /* NOTE: maybe change */
+    char * caches[15]; /* NOTE: maybe change */
 };
 typedef struct eax2 EAX2;
 
@@ -105,6 +105,8 @@ typedef struct cpuid_info * CPUID_INFO;
 void getVendor(EAX0 *);
 
 void getProcessorInfo(EAX1 *);
+
+void getCachesInfo(EAX2 *);
 
 CPUID_INFO CPUID_INFO_create();
 
