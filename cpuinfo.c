@@ -100,6 +100,27 @@ void getProcessorInfo(EAX1 * res)
     res->pbe = (e[3] >> 0x1F) & 0x1;
 }
 
+void getCachesInfo(EAX2 * res)
+{
+    unsigned int e[4];
+    int nb, i;
+    asm("mov $2, %%eax\n"
+        "cpuid\n"
+        "mov %%eax, %0\n"
+        "mov %%ebx, %1\n"
+        "mov %%ecx, %2\n"
+        "mov %%edx, %3\n"
+        : "=r" (e[0]), "=r" (e[1]), "=r" (e[2]), "=r" (e[3]) /* OUTPUT */
+        : /* INPUT */
+        : "%eax", "%ebx", "%ecx", "edx" /* clobbered register */
+       );
+
+    nb = e[0] & 0xFF;
+    printf("nb => 0x%x\n", nb);
+    for(i=1; i < 15; ++i)
+        res->caches[i-1] = (e[0] >> 0x8*i) & 0xFF;
+}
+
 CPUID_INFO CPUID_INFO_create()
 {
     CPUID_INFO res = malloc(sizeof(struct cpuid_info));

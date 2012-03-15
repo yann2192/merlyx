@@ -87,10 +87,17 @@ struct eax1
 
 typedef struct eax1 EAX1;
 
+struct eax2
+{
+    unsigned char caches[15]; /* NOTE: maybe change */
+};
+typedef struct eax2 EAX2;
+
 struct cpuid_info
 {
     EAX0 info1;
     EAX1 info2;
+    EAX2 info3;
 };
 
 typedef struct cpuid_info * CPUID_INFO;
