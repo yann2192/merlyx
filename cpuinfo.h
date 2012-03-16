@@ -113,6 +113,8 @@ struct eax4
     unsigned char ciitlcl;
     unsigned char cci;
 
+    unsigned short cache_size;
+
     struct eax4 * next;
 };
 typedef struct eax4 EAX4;

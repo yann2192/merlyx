@@ -480,6 +480,8 @@ void getCachesParameters(EAX4 * res)
             current->ciitlcl = (e[3] >> 1) & 0x1;
             current->cci = (e[3] >> 2) & 0x1;
 
+            current->cache_size = (current->woa + 1) * (current->plp + 1) * (current->scls + 1);
+
             i += 1;
         }
     } while(tmp != 0);
@@ -595,6 +597,7 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info)
         fprintf(f, " ------ Cache : %d ------\n", i);
         fprintf(f, "Cache type                                   : %s\n", current->cache_type);
         fprintf(f, "Cache level                                  : 0x%x\n", current->cache_level);
+        fprintf(f, "Cache size                                   : %d bytes\n", current->cache_size);
         fprintf(f, "Self initializing cache level                : %s\n", current->sicl ? "true" : "false");
         fprintf(f, "Fully associative cache                      : %s\n", current->fac ? "true" : "false");
         fprintf(f, "Maximum number of threads sharing this cache : %d\n", current->mntstc);
