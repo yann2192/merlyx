@@ -2,17 +2,18 @@
 
 void getVendor(EAX0 * res)
 {
-    unsigned int * t = (unsigned int *)res->vendor;
-    asm("xor %%eax, %%eax\n"
-        "cpuid\n"
-        "mov %%eax, %0\n"
-        "mov %%ebx, %1\n"
-        "mov %%edx, %2\n"
-        "mov %%ecx, %3\n"
-        : "=r" (res->lsfns), "=r" (t[0]), "=r" (t[1]), "=r" (t[2]) /* OUTPUT */
-        : /* INPUT */
-        : "%eax", "%ebx", "%ecx", "edx" /* clobbered register */
-       );
+    unsigned int e[4];
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0)
+        );
+    res->lsfns = e[0];
+    memcpy((res->vendor), e+1, 4);
+    memcpy((res->vendor)+8, e+2, 4);
+    memcpy((res->vendor)+4, e+3, 4);
     res->vendor[12] = '\0';
 }
 
@@ -20,16 +21,13 @@ void getProcessorInfo(EAX1 * res)
 {
     unsigned int e[4];
     unsigned char tmp;
-    asm("mov $1, %%eax\n"
-        "cpuid\n"
-        "mov %%eax, %0\n"
-        "mov %%ebx, %1\n"
-        "mov %%ecx, %2\n"
-        "mov %%edx, %3\n"
-        : "=r" (e[0]), "=r" (e[1]), "=r" (e[2]), "=r" (e[3]) /* OUTPUT */
-        : /* INPUT */
-        : "%eax", "%ebx", "%ecx", "edx" /* clobbered register */
-       );
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (1)
+        );
     res->stepping = e[0] & 0xF; /* 0-3 */
     res->model = (e[0] >> 0x4) & 0xF; /* 4-7 */
     res->family = (e[0] >> 0x8) & 0xF; /* 8-11 */
@@ -120,16 +118,13 @@ void getCachesInfo(EAX2 * res)
     unsigned int e[4];
     int nb, i;
     unsigned char tmp;
-    asm("mov $2, %%eax\n"
-        "cpuid\n"
-        "mov %%eax, %0\n"
-        "mov %%ebx, %1\n"
-        "mov %%ecx, %2\n"
-        "mov %%edx, %3\n"
-        : "=r" (e[0]), "=r" (e[1]), "=r" (e[2]), "=r" (e[3]) /* OUTPUT */
-        : /* INPUT */
-        : "%eax", "%ebx", "%ecx", "edx" /* clobbered register */
-       );
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (2)
+        );
 
     nb = e[0] & 0xFF;
     printf("nb => 0x%x\n", nb);
