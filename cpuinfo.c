@@ -433,23 +433,84 @@ void getCachesInfo(EAX2 * res)
     }
 }
 
+void getCachesParameters(EAX4 * res)
+{
+    int i = 0;
+    char tmp;
+    EAX4 * current = res;
+    unsigned int e[4];
+    do {
+        asm("cpuid"
+            : "=a" (e[0]),
+            "=b" (e[1]),
+            "=c" (e[2]),
+            "=d" (e[3])
+            : "a" (4),
+            "c" (i)
+           );
+        tmp = e[0] & 0x1F;
+        if(tmp > 0) {
+            if(i) {
+                current->next = malloc(sizeof(EAX4));
+                current = current->next;
+            }
+            switch(tmp) {
+                case 0:
+                    current->cache_type = "NULL (0)"; break;
+                case 1:
+                    current->cache_type = "Data Cache (1)"; break;
+                case 2:
+                    current->cache_type = "Instruction Cache (2)"; break;
+                case 3:
+                    current->cache_type = "Unified Cache (3)"; break;
+            }
+            current->cache_level = (e[0] >> 5) & 0x7;
+            current->sicl = (e[0] >> 8) & 0x1;
+            current->fac = (e[0] >> 9) & 0x1;
+            current->mntstc = (e[0] >> 14) & 0x7FF;
+            current->napicidrtp = (e[0] >> 26) & 0x1F;
+
+            current->scls = e[1] & 0xFFF;
+            current->plp = (e[1] >> 12) & 0x3FF;
+            current->woa = (e[1] >> 22) & 0x3FF;
+
+            current->nsets = e[2];
+
+            current->wbinvd = e[3] & 0x1;
+            current->ciitlcl = (e[3] >> 1) & 0x1;
+            current->cci = (e[3] >> 2) & 0x1;
+
+            i += 1;
+        }
+    } while(tmp != 0);
+}
+
 CPUID_INFO CPUID_INFO_create()
 {
     CPUID_INFO res = malloc(sizeof(struct cpuid_info));
     getVendor(&(res->info1));
     getProcessorInfo(&(res->info2));
     getCachesInfo(&(res->info3));
+    getCachesParameters(&(res->info4));
     return res;
 }
 
 void CPUID_INFO_free(CPUID_INFO p)
 {
+    EAX4 * a = p->info4.next, * b;
+    while(a != NULL)
+    {
+        b = a;
+        a = a->next;
+        free(b);
+    }
     free(p);
 }
 
 void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info)
 {
     int i;
+    EAX4 * current;
     fprintf(f, "Largest Standard Function Number Supported : 0x%x\n", info->info1.lsfns);
     fprintf(f, "Vendor                                     : %s\n\n", info->info1.vendor);
     fprintf(f, "Stepping                                   : 0x%x\n", info->info2.stepping);
@@ -525,5 +586,27 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info)
     fprintf(f, "\nCaches and TLB descriptor :\n");
     for(i=0; i < 15; ++i)
         if(info->info3.caches[i])
-            fprintf(f, "%s\n", info->info3.caches[i]);
+            fprintf(f, "     %s\n", info->info3.caches[i]);
+
+    current = &(info->info4);
+    i = 0;
+    fprintf(f, "\n");
+    while(current != NULL) {
+        fprintf(f, " ------ Cache : %d ------\n", i);
+        fprintf(f, "Cache type                                   : %s\n", current->cache_type);
+        fprintf(f, "Cache level                                  : 0x%x\n", current->cache_level);
+        fprintf(f, "Self initializing cache level                : %s\n", current->sicl ? "true" : "false");
+        fprintf(f, "Fully associative cache                      : %s\n", current->fac ? "true" : "false");
+        fprintf(f, "Maximum number of threads sharing this cache : %d\n", current->mntstc);
+        fprintf(f, "Number of APIC IDs reserved for this package : %d\n", current->napicidrtp);
+        fprintf(f, "System Coherency Line Size                   : %d\n", current->scls);
+        fprintf(f, "Physical Line partitions                     : %d\n", current->plp);
+        fprintf(f, "Ways of Associativity                        : %d\n", current->woa);
+        fprintf(f, "Number of Sets  - 1                          : %d\n", current->nsets);
+        fprintf(f, "WBINVD/INVD behavior on lower level caches   : %s\n", current->wbinvd ? "true" : "false");
+        fprintf(f, "Cache is inclusive to lower cache levels     : %s\n", current->ciitlcl ? "true" : "false");
+        fprintf(f, "Complex Cache Indexing                       : %s\n", current->cci ? "true" : "false");
+        current = current->next;
+        ++i;
+    }
 }

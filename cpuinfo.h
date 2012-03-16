@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 struct eax0
 {
@@ -93,11 +94,35 @@ struct eax2
 };
 typedef struct eax2 EAX2;
 
+struct eax4
+{
+    char * cache_type;
+    unsigned char cache_level;
+    unsigned char sicl;
+    unsigned char fac;
+    unsigned short mntstc;
+    unsigned char napicidrtp;
+
+    unsigned short scls;
+    unsigned short plp;
+    unsigned short woa;
+
+    unsigned int nsets;
+
+    unsigned char wbinvd;
+    unsigned char ciitlcl;
+    unsigned char cci;
+
+    struct eax4 * next;
+};
+typedef struct eax4 EAX4;
+
 struct cpuid_info
 {
     EAX0 info1;
     EAX1 info2;
     EAX2 info3;
+    EAX4 info4;
 };
 
 typedef struct cpuid_info * CPUID_INFO;
@@ -107,6 +132,8 @@ void getVendor(EAX0 *);
 void getProcessorInfo(EAX1 *);
 
 void getCachesInfo(EAX2 *);
+
+void getCachesParameters(EAX4 *);
 
 CPUID_INFO CPUID_INFO_create();
 
