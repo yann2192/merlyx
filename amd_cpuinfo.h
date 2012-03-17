@@ -7,10 +7,12 @@
 
 struct amd_eax1
 {
+    char cpuname[48];
+
     unsigned char stepping;
     unsigned char model;
     unsigned char family;
-    char * cputype;
+    /*char * cputype;*/
     unsigned char extendedmodel;
     unsigned short extendedfamily;
 
@@ -21,31 +23,18 @@ struct amd_eax1
 
     unsigned char sse3;
     unsigned char pclmuldq;
-    unsigned char dtes64;
     unsigned char monitor;
-    unsigned char ds_cpl;
-    unsigned char vmx;
-    unsigned char smx;
-    unsigned char eist;
-    unsigned char tm2;
     unsigned char ssse3;
-    unsigned char cnxt_id;
     unsigned char fma;
     unsigned char cx16;
-    unsigned char xtpr;
-    unsigned char pdcm;
-    unsigned char pcid;
-    unsigned char dca;
     unsigned char sse41;
     unsigned char sse42;
-    unsigned char x2apic;
-    unsigned char movbe;
     unsigned char popcnt;
-    unsigned char tsc_deadline;
     unsigned char aes;
     unsigned char xsave;
     unsigned char osxsave;
     unsigned char avx;
+    unsigned char f16c;
 
     unsigned char fpu;
     unsigned char vme;
@@ -64,18 +53,39 @@ struct amd_eax1
     unsigned char cmov;
     unsigned char pat;
     unsigned char pse_36;
-    unsigned char psn;
     unsigned char clfsh;
-    unsigned char ds;
-    unsigned char acpi;
     unsigned char mmx;
     unsigned char fxsr;
     unsigned char sse;
     unsigned char sse2;
-    unsigned char ss;
     unsigned char htt;
-    unsigned char tm;
-    unsigned char pbe;
+
+    /*unsigned char lahfsahf;
+    unsigned char cmplegacy;
+    unsigned char svm;
+    unsigned char extapicspace;
+    unsigned char altmovcr8;
+    unsigned char abm;
+    unsigned char sse4a;
+    unsigned char misalignsse;
+    unsigned char 3dnowprefetch;
+    unsigned char osvw;
+    unsigned char ibs;
+    unsigned char xop;
+    unsigned char skinit;
+    unsigned char fma4;
+    unsigned char nodeid;
+    unsigned char tbm;
+    unsigned char topologyextensions;
+
+    unsigned char nx;
+    unsigned char mmxext;
+    unsigned char ffxsr;
+    unsigned char page1gb;
+    unsigned char rdtscp;
+    unsigned char lm;
+    unsigned char 3dnowext;
+    unsigned char 3dnow;*/
 };
 
 typedef struct amd_eax1 amd_EAX1;

@@ -94,6 +94,31 @@ void intel_getProcessorInfo(intel_EAX1 * res)
     res->htt = (e[3] >> 0x1C) & 0x1;
     res->tm = (e[3] >> 0x1D) & 0x1;
     res->pbe = (e[3] >> 0x1F) & 0x1;
+
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000002)
+        );
+    memcpy(res->cpuname, e, 16);
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000003)
+        );
+    memcpy(res->cpuname+16, e, 16);
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000004)
+        );
+    memcpy(res->cpuname+32, e, 16);
 }
 
 void intel_getCachesInfo(intel_EAX2 * res)
@@ -480,6 +505,7 @@ void intel_CPUID_INFO4_free(intel_EAX4 * res)
 
 void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2)
 {
+    fprintf(f, "Processor Brand String                     : %s\n", info2->cpuname);
     fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
     fprintf(f, "Model                                      : 0x%x\n", info2->model);
     fprintf(f, "Family                                     : 0x%x\n", info2->family);

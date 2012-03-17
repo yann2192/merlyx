@@ -3,7 +3,6 @@
 void amd_getProcessorInfo(amd_EAX1 * res)
 {
     unsigned int e[4];
-    unsigned char tmp;
     asm("cpuid"
         : "=a" (e[0]),
         "=b" (e[1]),
@@ -14,23 +13,9 @@ void amd_getProcessorInfo(amd_EAX1 * res)
     res->stepping = e[0] & 0xF; /* 0-3 */
     res->model = (e[0] >> 0x4) & 0xF; /* 4-7 */
     res->family = (e[0] >> 0x8) & 0xF; /* 8-11 */
-    tmp = (e[0] >> 0xC) & 0x3; /* 12-13 */
+    /* NOTE: cpu type ???? */
     res->extendedmodel = (e[0] >> 0x10) & 0x7; /* 16-19 */
     res->extendedfamily = (e[0] >> 0x14) & 0xFF; /* 20-27 */
-
-    switch(tmp){
-        case 0: 
-            res->cputype = "Original OEM Processor (0x0)\n";
-            break;
-        case 1:
-            res->cputype = "OverDrive Processor (0x1)\n";
-            break;
-        case 2:
-            res->cputype = "Dual Processor (0x2)\n";
-            break;
-        default:
-            res->cputype = "Unknown\n";
-    }
 
     res->brand_id = e[1] & 0xFF;
     res->chunks = (e[1] >> 0x8) & 0xFF;
@@ -39,31 +24,18 @@ void amd_getProcessorInfo(amd_EAX1 * res)
 
     res->sse3 = e[2] & 0x1;
     res->pclmuldq = (e[2] >> 0x1) & 0x1;
-    res->dtes64 = (e[2] >> 0x2) & 0x1;
     res->monitor = (e[2] >> 0x3) & 0x1;
-    res->ds_cpl = (e[2] >> 0x4) & 0x1;
-    res->vmx = (e[2] >> 0x5) & 0x1;
-    res->smx = (e[2] >> 0x6) & 0x1;
-    res->eist = (e[2] >> 0x7) & 0x1;
-    res->tm2 = (e[2] >> 0x8) & 0x1;
     res->ssse3 = (e[2] >> 0x9) & 0x1;
-    res->cnxt_id = (e[2] >> 0xA) & 0x1;
     res->fma = (e[2] >> 0xC) & 0x1;
     res->cx16 = (e[2] >> 0xD) & 0x1;
-    res->xtpr = (e[2] >> 0xE) & 0x1;
-    res->pdcm = (e[2] >> 0xF) & 0x1;
-    res->pcid = (e[2] >> 0x11) & 0x1;
-    res->dca = (e[2] >> 0x12) & 0x1;
     res->sse41 = (e[2] >> 0x13) & 0x1;
     res->sse42 = (e[2] >> 0x14) & 0x1;
-    res->x2apic = (e[2] >> 0x15) & 0x1;
-    res->movbe = (e[2] >> 0x16) & 0x1;
     res->popcnt = (e[2] >> 0x17) & 0x1;
-    res->tsc_deadline = (e[2] >> 0x18) & 0x1;
     res->aes = (e[2] >> 0x19) & 0x1;
     res->xsave = (e[2] >> 0x1A) & 0x1;
     res->osxsave = (e[2] >> 0x1B) & 0x1;
     res->avx = (e[2] >> 0x1C) & 0x1;
+    res->f16c = (e[2] >> 0x1D) & 0x1;
 
     res->fpu = e[3] & 0x1;
     res->vme = (e[3] >> 0x1) & 0x1;
@@ -82,18 +54,37 @@ void amd_getProcessorInfo(amd_EAX1 * res)
     res->cmov = (e[3] >> 0xF) & 0x1;
     res->pat = (e[3] >> 0x10) & 0x1;
     res->pse_36 = (e[3] >> 0x11) & 0x1;
-    res->psn = (e[3] >> 0x12) & 0x1;
     res->clfsh = (e[3] >> 0x13) & 0x1;
-    res->ds = (e[3] >> 0x15) & 0x1;
-    res->acpi = (e[3] >> 0x16) & 0x1;
     res->mmx = (e[3] >> 0x17) & 0x1;
     res->fxsr = (e[3] >> 0x18) & 0x1;
     res->sse = (e[3] >> 0x19) & 0x1;
     res->sse2 = (e[3] >> 0x1A) & 0x1;
-    res->ss = (e[3] >> 0x1B) & 0x1;
     res->htt = (e[3] >> 0x1C) & 0x1;
-    res->tm = (e[3] >> 0x1D) & 0x1;
-    res->pbe = (e[3] >> 0x1F) & 0x1;
+
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000002)
+        );
+    memcpy(res->cpuname, e, 16);
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000003)
+        );
+    memcpy(res->cpuname+16, e, 16);
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000004)
+        );
+    memcpy(res->cpuname+32, e, 16);
 }
 
 void amd_getCachesInfo(amd_EAX2 * res)
@@ -480,10 +471,11 @@ void amd_CPUID_INFO4_free(amd_EAX4 * res)
 
 void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
 {
+    fprintf(f, "Processor Brand String                     : %s\n", info2->cpuname);
     fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
     fprintf(f, "Model                                      : 0x%x\n", info2->model);
     fprintf(f, "Family                                     : 0x%x\n", info2->family);
-    fprintf(f, "Processor type                             : %s\n", info2->cputype);
+    /*fprintf(f, "Processor type                             : %s\n", info2->cputype);*/
     fprintf(f, "Extended model                             : 0x%x\n", info2->extendedmodel);
     fprintf(f, "Extended family                            : 0x%x\n\n", info2->extendedfamily);
 
@@ -494,31 +486,18 @@ void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
 
     fprintf(f, "SSE3         : %s\n", info2->sse3 ? "true" : "false");
     fprintf(f, "PCLMULDQ     : %s\n", info2->pclmuldq ? "true" : "false");
-    fprintf(f, "DTES64       : %s\n", info2->dtes64 ? "true" : "false");
     fprintf(f, "MONITOR      : %s\n", info2->monitor ? "true" : "false");
-    fprintf(f, "DS-CPL       : %s\n", info2->ds_cpl ? "true" : "false");
-    fprintf(f, "VMX          : %s\n", info2->vmx ? "true" : "false");
-    fprintf(f, "SMX          : %s\n", info2->smx ? "true" : "false");
-    fprintf(f, "EIST         : %s\n", info2->eist ? "true" : "false");
-    fprintf(f, "TM2          : %s\n", info2->tm2 ? "true" : "false");
     fprintf(f, "SSSE3        : %s\n", info2->ssse3 ? "true" : "false");
-    fprintf(f, "CNXT-ID      : %s\n", info2->cnxt_id ? "true" : "false");
     fprintf(f, "FMA          : %s\n", info2->fma ? "true" : "false");
     fprintf(f, "CX16         : %s\n", info2->cx16 ? "true" : "false");
-    fprintf(f, "XTPR         : %s\n", info2->xtpr ? "true" : "false");
-    fprintf(f, "PDCM         : %s\n", info2->pdcm ? "true" : "false");
-    fprintf(f, "PCID         : %s\n", info2->pcid ? "true" : "false");
-    fprintf(f, "DCA          : %s\n", info2->dca ? "true" : "false");
     fprintf(f, "SSE4.1       : %s\n", info2->sse41 ? "true" : "false");
     fprintf(f, "SSE4.2       : %s\n", info2->sse42 ? "true" : "false");
-    fprintf(f, "x2APIC       : %s\n", info2->x2apic ? "true" : "false");
-    fprintf(f, "MOVBE        : %s\n", info2->movbe ? "true" : "false");
     fprintf(f, "POPCNT       : %s\n", info2->popcnt ? "true" : "false");
-    fprintf(f, "TSC-DEADLINE : %s\n", info2->tsc_deadline ? "true" : "false");
     fprintf(f, "AES          : %s\n", info2->aes ? "true" : "false");
     fprintf(f, "XSAVE        : %s\n", info2->xsave ? "true" : "false");
     fprintf(f, "OSXSAVE      : %s\n", info2->osxsave ? "true" : "false");
-    fprintf(f, "AVX          : %s\n\n", info2->avx ? "true" : "false");
+    fprintf(f, "AVX          : %s\n", info2->avx ? "true" : "false");
+    fprintf(f, "F16C         : %s\n\n", info2->f16c ? "true" : "false");
 
     fprintf(f, "FPU          : %s\n", info2->fpu ? "true" : "false");
     fprintf(f, "VME          : %s\n", info2->vme ? "true" : "false");
@@ -537,18 +516,12 @@ void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
     fprintf(f, "CMOV         : %s\n", info2->cmov ? "true" : "false");
     fprintf(f, "PAT          : %s\n", info2->pat ? "true" : "false");
     fprintf(f, "PSE-36       : %s\n", info2->pse_36 ? "true" : "false");
-    fprintf(f, "PSN          : %s\n", info2->psn ? "true" : "false");
     fprintf(f, "CLFSH        : %s\n", info2->clfsh ? "true" : "false");
-    fprintf(f, "DS           : %s\n", info2->ds ? "true" : "false");
-    fprintf(f, "ACPI         : %s\n", info2->acpi ? "true" : "false");
     fprintf(f, "MMX          : %s\n", info2->mmx ? "true" : "false");
     fprintf(f, "FXSR         : %s\n", info2->fxsr ? "true" : "false");
     fprintf(f, "SSE          : %s\n", info2->sse ? "true" : "false");
     fprintf(f, "SSE2         : %s\n", info2->sse2 ? "true" : "false");
-    fprintf(f, "SS           : %s\n", info2->ss ? "true" : "false");
     fprintf(f, "HTT          : %s\n", info2->htt ? "true" : "false");
-    fprintf(f, "TM           : %s\n", info2->tm ? "true" : "false");
-    fprintf(f, "PBE          : %s\n", info2->pbe ? "true" : "false");
 }
 
 void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3)

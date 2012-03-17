@@ -7,6 +7,8 @@
 
 struct intel_eax1
 {
+    char cpuname[48];
+
     unsigned char stepping;
     unsigned char model;
     unsigned char family;
