@@ -127,7 +127,7 @@ void getCachesInfo(EAX2 * res)
         );
 
     nb = e[0] & 0xFF;
-    /*printf("nb => 0x%x\n", nb);*/
+    printf("nb => 0x%x\n", nb);
     for(i=1; i < 16; ++i) {
         if(i < 4)
             tmp = (e[0] >> 0x8*i) & 0xFF;
