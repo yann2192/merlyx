@@ -1,5 +1,6 @@
 #include "cpuinfo.h"
-#include "creseau.h"
+#include "network.h"
+#include "memory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -74,10 +75,16 @@ int main(int argc, char * argv[])
         CPUID_INFO_free(info);
         fprintf(output, "\n");
     }
+    if(odefault || options[2])
+    {
+        fprintf(output, "------ Memory ------\n");
+        memory_usage(output);
+        fprintf(output, "\n");
+    }
     if(odefault || options[3])
     {
         fprintf(output, "------ Network ------\n");
-        interface(output);
+        interfaces(output);
         fprintf(output, "\n");
     }
     if(output != stdout) fclose(output);
