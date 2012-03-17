@@ -59,5 +59,7 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO p)
         amd_CPUID_INFO2_fprintf(f, &(p->info2.amd));
         amd_CPUID_INFO3_fprintf(f, &(p->info3.amd));
         amd_CPUID_INFO4_fprintf(f, &(p->info4.amd));
+    } else {
+        fprintf(f, ">> unknown Processor !\n");
     }
 }
