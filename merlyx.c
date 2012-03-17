@@ -1,5 +1,5 @@
 #include "cpuinfo.h"
-#include "creseau.h"
+#include "network.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
     if(odefault || options[3])
     {
         fprintf(output, "------ Network ------\n");
-        interface(output);
+        interfaces(output);
         fprintf(output, "\n");
     }
     if(output != stdout) fclose(output);
