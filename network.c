@@ -40,31 +40,31 @@ void interfaces(FILE * f)
             continue; /* erreur */
         }
 
-        printf("Interface: %s\n", ifr->ifr_name);
-        printf("IP Address: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+        fprintf(f, "Interface: %s\n", ifr->ifr_name);
+        fprintf(f, "IP Address: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
         if(!ioctl(sockfd, SIOCGIFHWADDR, ifr)) {
             if(ifr->ifr_hwaddr.sa_family == ARPHRD_ETHER){
                 u = (unsigned char *) &ifr->ifr_addr.sa_data;
 
                 if(u[0] + u[1] + u[2] + u[3] + u[4] + u[5])
-                    printf("HW Address: %2.2x.%2.2x.%2.2x.%2.2x.%2.2x.%2.2x\n", u[0], u[1], u[2], u[3], u[4], u[5]);
+                    fprintf(f, "HW Address: %2.2x.%2.2x.%2.2x.%2.2x.%2.2x.%2.2x\n", u[0], u[1], u[2], u[3], u[4], u[5]);
 
                 if(!ioctl(sockfd, SIOCGIFNETMASK, ifr))
-                    printf("Netmask: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+                    fprintf(f, "Netmask: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
                 if(ifr->ifr_flags & IFF_BROADCAST)
                     if(!ioctl(sockfd, SIOCGIFBRDADDR, ifr))
-                        printf("Broadcast: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+                        fprintf(f, "Broadcast: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
                 if(!ioctl(sockfd, SIOCGIFMTU, ifr))
-                    printf("MTU: %u\n", ifr->ifr_mtu);
+                    fprintf(f, "MTU: %u\n", ifr->ifr_mtu);
 
                 if(!ioctl(sockfd, SIOCGIFMETRIC, ifr))
-                    printf("Metric: %u\n", ifr->ifr_metric);
+                    fprintf(f, "Metric: %u\n", ifr->ifr_metric);
             }
         }
-        printf("\n");
+        fprintf(f, "\n");
     }
     close(sockfd);
 

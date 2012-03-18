@@ -54,7 +54,13 @@ int main(int argc, char * argv[])
                 options[5] = 1; break;
             case 'o':
                 options[6] = 1;
-                output = fopen(optarg, "w"); break;
+                output = fopen(optarg, "w");
+                if(!output) {
+                    printf("Fail to open %s\n", optarg);
+                    usage();
+                    exit(0);
+                }
+                break;
             case '?':
                 usage(); exit(0);
             default:
@@ -87,7 +93,7 @@ int main(int argc, char * argv[])
         interfaces(output);
         fprintf(output, "\n");
     }
-    if(output != stdout) fclose(output);
+    if(options[6]) fclose(output);
 
     return 0;
 }
