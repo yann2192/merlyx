@@ -505,6 +505,8 @@ void intel_CPUID_INFO4_free(intel_EAX4 * res)
 
 void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2)
 {
+    int a = 0;
+
     fprintf(f, "Processor Brand String                     : %s\n", info2->cpuname);
     fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
     fprintf(f, "Model                                      : 0x%x\n", info2->model);
@@ -520,63 +522,115 @@ void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2)
 
     fprintf(f, "Features supported :\n");
 
-    if(info2->sse3) fprintf(f, "SSE3\n");
-    if(info2->pclmuldq) fprintf(f, "PCLMULDQ\n");
-    if(info2->dtes64) fprintf(f, "DTES64\n");
-    if(info2->monitor) fprintf(f, "MONITOR\n");
-    if(info2->ds_cpl) fprintf(f, "DS-CPL\n");
-    if(info2->vmx) fprintf(f, "VMX\n");
-    if(info2->smx) fprintf(f, "SMX\n");
-    if(info2->eist) fprintf(f, "EIST\n");
-    if(info2->tm2) fprintf(f, "TM2\n");
-    if(info2->ssse3) fprintf(f, "SSSE3\n");
-    if(info2->cnxt_id) fprintf(f, "CNXT-ID\n");
-    if(info2->fma) fprintf(f, "FMA\n");
-    if(info2->cx16) fprintf(f, "CX16\n");
-    if(info2->xtpr) fprintf(f, "XTPR\n");
-    if(info2->pdcm) fprintf(f, "PDCM\n");
-    if(info2->pcid) fprintf(f, "PCID\n");
-    if(info2->dca) fprintf(f, "DCA\n");
-    if(info2->sse41) fprintf(f, "SSE4.1\n");
-    if(info2->sse42) fprintf(f, "SSE4.2\n");
-    if(info2->x2apic) fprintf(f, "x2APIC\n");
-    if(info2->movbe) fprintf(f, "MOVBE\n");
-    if(info2->popcnt) fprintf(f, "POPCNT\n");
-    if(info2->tsc_deadline) fprintf(f, "TSC-DEADLINE\n");
-    if(info2->aes) fprintf(f, "AES\n");
-    if(info2->xsave) fprintf(f, "XSAVE\n");
-    if(info2->osxsave) fprintf(f, "OSXSAVE\n");
-    if(info2->avx) fprintf(f, "AVX\n");
+    if(info2->sse3){ fprintf(f, "SSE3 "); ++a; }
+    if(info2->pclmuldq){ fprintf(f, "PCLMULDQ "); ++a; }
+    if(info2->dtes64){ fprintf(f, "DTES64 "); ++a; }
+    if(info2->monitor){ fprintf(f, "MONITOR "); ++a; }
+    if(info2->ds_cpl){ fprintf(f, "DS-CPL "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->vmx){ fprintf(f, "VMX "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->smx){ fprintf(f, "SMX "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->eist){ fprintf(f, "EIST "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->tm2){ fprintf(f, "TM2 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->ssse3){ fprintf(f, "SSSE3 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->cnxt_id){ fprintf(f, "CNXT-ID "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->fma){ fprintf(f, "FMA "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->cx16){ fprintf(f, "CX16 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->xtpr){ fprintf(f, "XTPR "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pdcm){ fprintf(f, "PDCM "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pcid){ fprintf(f, "PCID "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->dca){ fprintf(f, "DCA "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->sse41){ fprintf(f, "SSE4.1 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->sse42){ fprintf(f, "SSE4.2 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->x2apic){ fprintf(f, "x2APIC "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->movbe){ fprintf(f, "MOVBE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->popcnt){ fprintf(f, "POPCNT "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->tsc_deadline){ fprintf(f, "TSC-DEADLINE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->aes){ fprintf(f, "AES "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->xsave){ fprintf(f, "XSAVE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->osxsave){ fprintf(f, "OSXSAVE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->avx){ fprintf(f, "AVX "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
 
-    if(info2->fpu) fprintf(f, "FPU\n");
-    if(info2->vme) fprintf(f, "VME\n");
-    if(info2->de) fprintf(f, "DE\n");
-    if(info2->pse) fprintf(f, "PSE\n");
-    if(info2->tsc) fprintf(f, "TSC\n");
-    if(info2->msr) fprintf(f, "MSR\n");
-    if(info2->pae) fprintf(f, "PAE\n");
-    if(info2->mce) fprintf(f, "MCE\n");
-    if(info2->cx8) fprintf(f, "CX8\n");
-    if(info2->apic) fprintf(f, "APIC\n");
-    if(info2->sep) fprintf(f, "SEP\n");
-    if(info2->mtrr) fprintf(f, "MTRR\n");
-    if(info2->pge) fprintf(f, "PGE\n");
-    if(info2->mca) fprintf(f, "MCA\n");
-    if(info2->cmov) fprintf(f, "CMOV\n");
-    if(info2->pat) fprintf(f, "PAT\n");
-    if(info2->pse_36) fprintf(f, "PSE-36\n");
-    if(info2->psn) fprintf(f, "PSN\n");
-    if(info2->clfsh) fprintf(f, "CLFSH\n");
-    if(info2->ds) fprintf(f, "DS\n");
-    if(info2->acpi) fprintf(f, "ACPI\n");
-    if(info2->mmx) fprintf(f, "MMX\n");
-    if(info2->fxsr) fprintf(f, "FXSR\n");
-    if(info2->sse) fprintf(f, "SSE\n");
-    if(info2->sse2) fprintf(f, "SSE2\n");
-    if(info2->ss) fprintf(f, "SS\n");
-    if(info2->htt) fprintf(f, "HTT\n");
-    if(info2->tm) fprintf(f, "TM\n");
-    if(info2->pbe) fprintf(f, "PBE\n");
+    if(info2->fpu){ fprintf(f, "FPU "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->vme){ fprintf(f, "VME "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->de){ fprintf(f, "DE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pse){ fprintf(f, "PSE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->tsc){ fprintf(f, "TSC "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->msr){ fprintf(f, "MSR "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pae){ fprintf(f, "PAE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->mce){ fprintf(f, "MCE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->cx8){ fprintf(f, "CX8 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->apic){ fprintf(f, "APIC "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->sep){ fprintf(f, "SEP "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->mtrr){ fprintf(f, "MTRR "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pge){ fprintf(f, "PGE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->mca){ fprintf(f, "MCA "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->cmov){ fprintf(f, "CMOV "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pat){ fprintf(f, "PAT "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pse_36){ fprintf(f, "PSE-36 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->psn){ fprintf(f, "PSN "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->clfsh){ fprintf(f, "CLFSH "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->ds){ fprintf(f, "DS "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->acpi){ fprintf(f, "ACPI "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->mmx){ fprintf(f, "MMX "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->fxsr){ fprintf(f, "FXSR "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->sse){ fprintf(f, "SSE "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->sse2){ fprintf(f, "SSE2 "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->ss){ fprintf(f, "SS "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->htt){ fprintf(f, "HTT "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->tm){ fprintf(f, "TM "); ++a; }
+    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(info2->pbe){ fprintf(f, "PBE "); ++a; }
+    fprintf(f, "\n");
 }
 
 void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 * info3)
