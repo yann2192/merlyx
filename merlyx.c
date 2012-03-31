@@ -1,9 +1,10 @@
-#include "cpuinfo.h"
-#include "network.h"
-#include "memory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "cpuinfo.h"
+#include "network.h"
+#include "memory.h"
+#include "get_uname.h"
 
 
 void usage()
@@ -18,19 +19,20 @@ void usage()
     printf("   -x,          write informations in HTML format\n");
     printf("   -h,          display help\n");
     printf("   -o FILE,     write informations into FILE\n");
+    printf("   -k,          display information for the Kernel\n");
 }
 
 int main(int argc, char * argv[])
 {
     int option;
     CPUID_INFO info;
-    char options[7], odefault=1;
-    char * liste_option = "cgmnxho:";
+    char options[8], odefault=1;
+    char * liste_option = "cgmnxho:k";
     FILE * output=stdout;
 
     opterr = 0; /* désactive les erreurs automatiques */
 
-    for(option=0; option<6; ++option)
+    for(option=0; option<8; ++option)
         options[option] = 0;
 
     while((option = getopt(argc, argv, liste_option)) != -1)
@@ -61,6 +63,9 @@ int main(int argc, char * argv[])
                     exit(0);
                 }
                 break;
+            case 'k':
+                if(odefault) odefault=0;
+                options[7] = 1; break;
             case '?':
                 usage(); exit(0);
             default:
@@ -72,7 +77,11 @@ int main(int argc, char * argv[])
         usage();
         exit(0);
     }
-
+    if(odefault || options[7])
+    {
+        get_uname(output);
+        fprintf(output, "\n");
+    }
     if(odefault || options[0])
     {
         fprintf(output, "------ CPU ------\n");

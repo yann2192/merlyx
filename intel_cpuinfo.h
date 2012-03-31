@@ -107,7 +107,7 @@ struct intel_eax4
     unsigned char ciitlcl;
     unsigned char cci;
 
-    unsigned short cache_size;
+    unsigned int cache_size;
 
     struct intel_eax4 * next;
 };
