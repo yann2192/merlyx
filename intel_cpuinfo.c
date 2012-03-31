@@ -464,6 +464,8 @@ void intel_getCachesParameters(intel_EAX4 * res)
                     current->cache_type = "Instruction Cache (2)"; break;
                 case 3:
                     current->cache_type = "Unified Cache (3)"; break;
+                default:
+                    current->cache_type = "Unknown Cache type"; break;
             }
             current->cache_level = (e[0] >> 5) & 0x7;
             current->sicl = (e[0] >> 8) & 0x1;
