@@ -30,6 +30,7 @@ CPUID_INFO CPUID_INFO_create()
         amd_getProcessorInfo(&(res->info2.amd));
         amd_getCachesInfo(&(res->info3.amd));
         amd_getCachesParameters(&(res->info4.amd));
+        amd_getProcessorTopology(&(res->info5.amd));
     }
     return res;
 }
@@ -45,6 +46,7 @@ void CPUID_INFO_free(CPUID_INFO p)
         amd_CPUID_INFO2_free(&(p->info2.amd));
         amd_CPUID_INFO3_free(&(p->info3.amd));
         amd_CPUID_INFO4_free(&(p->info4.amd));
+        amd_CPUID_INFO5_free(&(p->info5.amd));
     }
     free(p);
 }
@@ -62,6 +64,7 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO p)
         amd_CPUID_INFO2_fprintf(f, &(p->info2.amd));
         amd_CPUID_INFO3_fprintf(f, &(p->info3.amd));
         amd_CPUID_INFO4_fprintf(f, &(p->info4.amd));
+        amd_CPUID_INFO5_fprintf(f, &(p->info5.amd));
     } else {
         fprintf(f, ">> unknown Processor !\n");
     }

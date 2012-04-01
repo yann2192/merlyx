@@ -96,7 +96,7 @@ void amd_getCachesInfo(amd_EAX2 * res)
         "=b" (e[1]),
         "=c" (e[2]),
         "=d" (e[3])
-        : "a" (0x80000006)
+        : "a" (0x80000005)
         );
 
     res->L1ITlb2and4MSize = e[0] & 0xFF;
@@ -122,72 +122,228 @@ void amd_getCachesInfo(amd_EAX2 * res)
 
 void amd_getCachesParameters(amd_EAX4 * res)
 {
-    int i = 0;
-    char tmp;
-    amd_EAX4 * current = res;
     unsigned int e[4];
-    do {
-        asm("cpuid"
-            : "=a" (e[0]),
-            "=b" (e[1]),
-            "=c" (e[2]),
-            "=d" (e[3])
-            : "a" (4),
-            "c" (i)
-           );
-        tmp = e[0] & 0x1F;
-        if(tmp > 0) {
-            if(i) {
-                current->next = malloc(sizeof(amd_EAX4));
-                current = current->next;
-            }
-            switch(tmp) {
-                case 0:
-                    current->cache_type = "NULL (0)"; break;
-                case 1:
-                    current->cache_type = "Data Cache (1)"; break;
-                case 2:
-                    current->cache_type = "Instruction Cache (2)"; break;
-                case 3:
-                    current->cache_type = "Unified Cache (3)"; break;
-            }
-            current->cache_level = (e[0] >> 5) & 0x7;
-            current->sicl = (e[0] >> 8) & 0x1;
-            current->fac = (e[0] >> 9) & 0x1;
-            current->mntstc = (e[0] >> 14) & 0x7FF;
-            current->napicidrtp = (e[0] >> 26) & 0x1F;
+    unsigned int tmp;
 
-            current->scls = e[1] & 0xFFF;
-            current->plp = (e[1] >> 12) & 0x3FF;
-            current->woa = (e[1] >> 22) & 0x3FF;
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000006)
+       );
 
-            current->nsets = e[2];
+    res->L2ITlb2and4MSize = e[0] & 0xFFF;
+    tmp = (e[0] >> 12) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L2ITlb2and4MAssoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L2ITlb2and4MAssoc = "Direct mapped"; break;
+        case 2:
+            res->L2ITlb2and4MAssoc = "2-way associative"; break;
+        case 4:
+            res->L2ITlb2and4MAssoc = "4-way associative"; break;
+        case 6:
+            res->L2ITlb2and4MAssoc = "8-way associative"; break;
+        case 8:
+            res->L2ITlb2and4MAssoc = "16-way associative"; break;
+        case 0xA:
+            res->L2ITlb2and4MAssoc = "32-way associative"; break;
+        case 0xB:
+            res->L2ITlb2and4MAssoc = "48-way associative"; break;
+        case 0xC:
+            res->L2ITlb2and4MAssoc = "64-way associative"; break;
+        case 0xD:
+            res->L2ITlb2and4MAssoc = "96-way associative"; break;
+        case 0xE:
+            res->L2ITlb2and4MAssoc = "128-way associative"; break;
+        case 0xF:
+            res->L2ITlb2and4MAssoc = "Fully associative"; break;
+        default:
+            res->L2ITlb2and4MAssoc = "Error !"; break;
+    }
+    res->L2DTlb2and4MSize = (e[0] >> 16) & 0xFFF;
+    tmp = (e[0] >> 28) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L2DTlb2and4MAssoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L2DTlb2and4MAssoc = "Direct mapped"; break;
+        case 2:
+            res->L2DTlb2and4MAssoc = "2-way associative"; break;
+        case 4:
+            res->L2DTlb2and4MAssoc = "4-way associative"; break;
+        case 6:
+            res->L2DTlb2and4MAssoc = "8-way associative"; break;
+        case 8:
+            res->L2DTlb2and4MAssoc = "16-way associative"; break;
+        case 0xA:
+            res->L2DTlb2and4MAssoc = "32-way associative"; break;
+        case 0xB:
+            res->L2DTlb2and4MAssoc = "48-way associative"; break;
+        case 0xC:
+            res->L2DTlb2and4MAssoc = "64-way associative"; break;
+        case 0xD:
+            res->L2DTlb2and4MAssoc = "96-way associative"; break;
+        case 0xE:
+            res->L2DTlb2and4MAssoc = "128-way associative"; break;
+        case 0xF:
+            res->L2DTlb2and4MAssoc = "Fully associative"; break;
+        default:
+            res->L2DTlb2and4MAssoc = "Error !"; break;
+    }
 
-            current->wbinvd = e[3] & 0x1;
-            current->ciitlcl = (e[3] >> 1) & 0x1;
-            current->cci = (e[3] >> 2) & 0x1;
+    res->L2ITlb4KSize = e[1] & 0xFFF;
+    tmp = (e[1] >> 12) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L2ITlb4KAssoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L2ITlb4KAssoc = "Direct mapped"; break;
+        case 2:
+            res->L2ITlb4KAssoc = "2-way associative"; break;
+        case 4:
+            res->L2ITlb4KAssoc = "4-way associative"; break;
+        case 6:
+            res->L2ITlb4KAssoc = "8-way associative"; break;
+        case 8:
+            res->L2ITlb4KAssoc = "16-way associative"; break;
+        case 0xA:
+            res->L2ITlb4KAssoc = "32-way associative"; break;
+        case 0xB:
+            res->L2ITlb4KAssoc = "48-way associative"; break;
+        case 0xC:
+            res->L2ITlb4KAssoc = "64-way associative"; break;
+        case 0xD:
+            res->L2ITlb4KAssoc = "96-way associative"; break;
+        case 0xE:
+            res->L2ITlb4KAssoc = "128-way associative"; break;
+        case 0xF:
+            res->L2ITlb4KAssoc = "Fully associative"; break;
+        default:
+            res->L2ITlb4KAssoc = "Error !"; break;
+    }
+    res->L2DTlb4KSize = (e[1] >> 16) & 0xFFF;
+    tmp = (e[1] >> 28) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L2DTlb4KAssoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L2DTlb4KAssoc = "Direct mapped"; break;
+        case 2:
+            res->L2DTlb4KAssoc = "2-way associative"; break;
+        case 4:
+            res->L2DTlb4KAssoc = "4-way associative"; break;
+        case 6:
+            res->L2DTlb4KAssoc = "8-way associative"; break;
+        case 8:
+            res->L2DTlb4KAssoc = "16-way associative"; break;
+        case 0xA:
+            res->L2DTlb4KAssoc = "32-way associative"; break;
+        case 0xB:
+            res->L2DTlb4KAssoc = "48-way associative"; break;
+        case 0xC:
+            res->L2DTlb4KAssoc = "64-way associative"; break;
+        case 0xD:
+            res->L2DTlb4KAssoc = "96-way associative"; break;
+        case 0xE:
+            res->L2DTlb4KAssoc = "128-way associative"; break;
+        case 0xF:
+            res->L2DTlb4KAssoc = "Fully associative"; break;
+        default:
+            res->L2DTlb4KAssoc = "Error !"; break;
+    }
 
-            current->cache_size = (current->woa + 1) * (current->plp + 1) * (current->scls + 1) * (current->nsets + 1);
+    res->L2LineSize = e[2] & 0xFF;
+    res->L2LinesPerTag = (e[2] >> 8) & 0xF;
+    tmp = (e[2] >> 12) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L2Assoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L2Assoc = "Direct mapped"; break;
+        case 2:
+            res->L2Assoc = "2-way associative"; break;
+        case 4:
+            res->L2Assoc = "4-way associative"; break;
+        case 6:
+            res->L2Assoc = "8-way associative"; break;
+        case 8:
+            res->L2Assoc = "16-way associative"; break;
+        case 0xA:
+            res->L2Assoc = "32-way associative"; break;
+        case 0xB:
+            res->L2Assoc = "48-way associative"; break;
+        case 0xC:
+            res->L2Assoc = "64-way associative"; break;
+        case 0xD:
+            res->L2Assoc = "96-way associative"; break;
+        case 0xE:
+            res->L2Assoc = "128-way associative"; break;
+        case 0xF:
+            res->L2Assoc = "Fully associative"; break;
+        default:
+            res->L2Assoc = "Error !"; break;
+    }
+    res->L2Size = (e[2] >> 16) & 0xFFFF;
 
-            i += 1;
-        }
-    } while(tmp != 0);
+    res->L3LineSize = e[3] & 0xFF;
+    res->L3LinesPerTag = (e[3] >> 8) & 0xF;
+    tmp = (e[3] >> 12) & 0xF;
+    switch(tmp) {
+        case 0:
+            res->L3Assoc = "L2/L3 cache or TLB is disabled"; break;
+        case 1:
+            res->L3Assoc = "Direct mapped"; break;
+        case 2:
+            res->L3Assoc = "2-way associative"; break;
+        case 4:
+            res->L3Assoc = "4-way associative"; break;
+        case 6:
+            res->L3Assoc = "8-way associative"; break;
+        case 8:
+            res->L3Assoc = "16-way associative"; break;
+        case 0xA:
+            res->L3Assoc = "32-way associative"; break;
+        case 0xB:
+            res->L3Assoc = "48-way associative"; break;
+        case 0xC:
+            res->L3Assoc = "64-way associative"; break;
+        case 0xD:
+            res->L3Assoc = "96-way associative"; break;
+        case 0xE:
+            res->L3Assoc = "128-way associative"; break;
+        case 0xF:
+            res->L3Assoc = "Fully associative"; break;
+        default:
+            res->L3Assoc = "Error !"; break;
+    }
+    res->L3Size = (e[3] >> 18) & 0x3FFF;
+}
+
+void amd_getProcessorTopology(amd_EAXB * res)
+{
+    unsigned int e[4];
+
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x80000008)
+       );
+
+    res->cpu_count = e[2] & 0xFF;
 }
 
 void amd_CPUID_INFO2_free(amd_EAX1 * res) {}
 
 void amd_CPUID_INFO3_free(amd_EAX2 * res) {}
 
-void amd_CPUID_INFO4_free(amd_EAX4 * res)
-{
-    amd_EAX4 * a = res->next, * b;
-    while(a != NULL)
-    {
-        b = a;
-        a = a->next;
-        free(b);
-    }
-}
+void amd_CPUID_INFO4_free(amd_EAX4 * res) {}
+
+void amd_CPUID_INFO5_free(amd_EAXB * res) {}
 
 void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
 {
@@ -197,7 +353,6 @@ void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
     fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
     fprintf(f, "Model                                      : 0x%x\n", info2->model);
     fprintf(f, "Family                                     : 0x%x\n", info2->family);
-    /*fprintf(f, "Processor type                             : %s\n", info2->cputype);*/
     fprintf(f, "Extended model                             : 0x%x\n", info2->extendedmodel);
     fprintf(f, "Extended family                            : 0x%x\n\n", info2->extendedfamily);
 
@@ -308,26 +463,31 @@ void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3)
 
 void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 * info4)
 {
-    int i=0;
-    amd_EAX4 * current = info4;
+    fprintf(f, " ------ L2/L3 Cache and TLB Identifiers ------\n");
+    fprintf(f, "L2 data TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2DTlb2and4MAssoc);
+    fprintf(f, "L2 data TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info4->L2DTlb2and4MSize);
+    fprintf(f, "L2 instruction TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2ITlb2and4MAssoc);
+    fprintf(f, "L2 instruction TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info4->L2ITlb2and4MSize);
     fprintf(f, "\n");
-    while(current != NULL) {
-        fprintf(f, " ------ Cache level : %d ------\n", current->cache_level);
-        fprintf(f, "Cache type                                   : %s\n", current->cache_type);
-        fprintf(f, "Cache level                                  : 0x%x\n", current->cache_level);
-        fprintf(f, "Cache size                                   : %dK\n", current->cache_size/1024);
-        fprintf(f, "Self initializing cache level                : %s\n", current->sicl ? "true" : "false");
-        fprintf(f, "Fully associative cache                      : %s\n", current->fac ? "true" : "false");
-        fprintf(f, "Maximum number of threads sharing this cache : %d\n", current->mntstc);
-        fprintf(f, "Number of APIC IDs reserved for this package : %d\n", current->napicidrtp);
-        fprintf(f, "System Coherency Line Size                   : %d\n", current->scls);
-        fprintf(f, "Physical Line partitions                     : %d\n", current->plp);
-        fprintf(f, "Ways of Associativity                        : %d\n", current->woa);
-        fprintf(f, "Number of Sets  - 1                          : %d\n", current->nsets);
-        fprintf(f, "WBINVD/INVD behavior on lower level caches   : %s\n", current->wbinvd ? "true" : "false");
-        fprintf(f, "Cache is inclusive to lower cache levels     : %s\n", current->ciitlcl ? "true" : "false");
-        fprintf(f, "Complex Cache Indexing                       : %s\n", current->cci ? "true" : "false");
-        current = current->next;
-        ++i;
-    }
+    fprintf(f, "L2 data TLB associativity for 4 KB pages : %s\n", info4->L2DTlb4KAssoc);
+    fprintf(f, "L2 data TLB number of entries for 4 KB pages : 0x%x\n", info4->L2DTlb4KSize);
+    fprintf(f, "L2 instruction TLB associativity for 4 KB pages : %s\n", info4->L2ITlb4KAssoc);
+    fprintf(f, "L2 instruction TLB number of entries for 4 KB pages : 0x%x\n", info4->L2ITlb4KSize);
+    fprintf(f, "\n");
+    fprintf(f, "L2 cache size in KB : 0x%x\n", info4->L2Size);
+    fprintf(f, "L2 cache associativity : %s\n", info4->L2Assoc);
+    fprintf(f, "L2 cache lines per tag : 0x%x\n", info4->L2LinesPerTag);
+    fprintf(f, "L2 cache line size in bytes : 0x%x\n", info4->L2LineSize);
+    fprintf(f, "\n");
+    fprintf(f, "L3 cache size in KB : 0x%x\n", info4->L3Size);
+    fprintf(f, "L3 cache associativity : %s\n", info4->L3Assoc);
+    fprintf(f, "L3 cache lines per tag : 0x%x\n", info4->L3LinesPerTag);
+    fprintf(f, "L3 cache line size in bytes : 0x%x\n", info4->L3LineSize);
+    fprintf(f, "\n");
+}
+
+void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB * info5)
+{
+    fprintf(f, "Number of physical cores : %d\n", info5->cpu_count);
+    fprintf(f, "\n");
 }

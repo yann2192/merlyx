@@ -89,28 +89,33 @@ typedef struct amd_eax2 amd_EAX2;
 
 struct amd_eax4
 {
-    char * cache_type;
-    unsigned char cache_level;
-    unsigned char sicl;
-    unsigned char fac;
-    unsigned short mntstc;
-    unsigned char napicidrtp;
+    char * L2DTlb2and4MAssoc;
+    unsigned short L2DTlb2and4MSize;
+    char * L2ITlb2and4MAssoc;
+    unsigned short L2ITlb2and4MSize;
 
-    unsigned short scls;
-    unsigned short plp;
-    unsigned short woa;
+    char * L2DTlb4KAssoc;
+    unsigned short L2DTlb4KSize;
+    char * L2ITlb4KAssoc;
+    unsigned short L2ITlb4KSize;
 
-    unsigned int nsets;
+    unsigned short L2Size;
+    char * L2Assoc;
+    unsigned short L2LinesPerTag;
+    unsigned short L2LineSize;
 
-    unsigned char wbinvd;
-    unsigned char ciitlcl;
-    unsigned char cci;
-
-    unsigned short cache_size;
-
-    struct amd_eax4 * next;
+    unsigned short L3Size;
+    char * L3Assoc;
+    unsigned short L3LinesPerTag;
+    unsigned short L3LineSize;
 };
 typedef struct amd_eax4 amd_EAX4;
+
+struct amd_eaxb
+{
+    unsigned short cpu_count;
+};
+typedef struct amd_eaxb amd_EAXB;
 
 void amd_getProcessorInfo(amd_EAX1 *);
 
@@ -118,16 +123,22 @@ void amd_getCachesInfo(amd_EAX2 *);
 
 void amd_getCachesParameters(amd_EAX4 *);
 
+void amd_getProcessorTopology(amd_EAXB *);
+
 void amd_CPUID_INFO2_free(amd_EAX1 *);
 
 void amd_CPUID_INFO3_free(amd_EAX2 *);
 
 void amd_CPUID_INFO4_free(amd_EAX4 *);
 
+void amd_CPUID_INFO5_free(amd_EAXB *);
+
 void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 *);
 
 void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 *);
 
 void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 *);
+
+void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB *);
 
 #endif

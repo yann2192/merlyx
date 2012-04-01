@@ -32,7 +32,7 @@ struct cpuid_info
     } info4;
     union {
         intel_EAXB intel;
-        void * amd;
+        amd_EAXB amd;
     } info5;
 };
 
