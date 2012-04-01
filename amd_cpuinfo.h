@@ -59,40 +59,31 @@ struct amd_eax1
     unsigned char sse;
     unsigned char sse2;
     unsigned char htt;
-
-    /*unsigned char lahfsahf;
-    unsigned char cmplegacy;
-    unsigned char svm;
-    unsigned char extapicspace;
-    unsigned char altmovcr8;
-    unsigned char abm;
-    unsigned char sse4a;
-    unsigned char misalignsse;
-    unsigned char 3dnowprefetch;
-    unsigned char osvw;
-    unsigned char ibs;
-    unsigned char xop;
-    unsigned char skinit;
-    unsigned char fma4;
-    unsigned char nodeid;
-    unsigned char tbm;
-    unsigned char topologyextensions;
-
-    unsigned char nx;
-    unsigned char mmxext;
-    unsigned char ffxsr;
-    unsigned char page1gb;
-    unsigned char rdtscp;
-    unsigned char lm;
-    unsigned char 3dnowext;
-    unsigned char 3dnow;*/
 };
 
 typedef struct amd_eax1 amd_EAX1;
 
 struct amd_eax2
 {
-    char * caches[15]; /* NOTE: maybe change */
+    unsigned short L1DTlb2and4MAssoc;
+    unsigned short L1DTlb2and4MSize;
+    unsigned short L1ITlb2and4MAssoc;
+    unsigned short L1ITlb2and4MSize;
+
+    unsigned short L1DTlb4KAssoc;
+    unsigned short L1DTlb4KSize;
+    unsigned short L1ITlb4KAssoc;
+    unsigned short L1ITlb4KSize;
+
+    unsigned short L1DcSize;
+    unsigned short L1DcAssoc;
+    unsigned short L1DcLinesPerTag;
+    unsigned short L1DcLineSize;
+
+    unsigned short L1IcSize;
+    unsigned short L1IcAssoc;
+    unsigned short L1IcLinesPerTag;
+    unsigned short L1IcLineSize;
 };
 typedef struct amd_eax2 amd_EAX2;
 
