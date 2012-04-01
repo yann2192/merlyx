@@ -30,6 +30,10 @@ struct cpuid_info
         intel_EAX4 intel;
         amd_EAX4 amd;
     } info4;
+    union {
+        intel_EAXB intel;
+        void * amd;
+    } info5;
 };
 
 typedef struct cpuid_info * CPUID_INFO;

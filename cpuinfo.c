@@ -25,6 +25,7 @@ CPUID_INFO CPUID_INFO_create()
         intel_getProcessorInfo(&(res->info2.intel));
         intel_getCachesInfo(&(res->info3.intel));
         intel_getCachesParameters(&(res->info4.intel));
+        intel_getProcessorTopology(&(res->info5.intel));
     } else if(!strncmp(res->info1.vendor, "AuthenticAMD", 12)) {
         amd_getProcessorInfo(&(res->info2.amd));
         amd_getCachesInfo(&(res->info3.amd));
@@ -39,6 +40,7 @@ void CPUID_INFO_free(CPUID_INFO p)
         intel_CPUID_INFO2_free(&(p->info2.intel));
         intel_CPUID_INFO3_free(&(p->info3.intel));
         intel_CPUID_INFO4_free(&(p->info4.intel));
+        intel_CPUID_INFO5_free(&(p->info5.intel));
     } else if(!strncmp(p->info1.vendor, "AuthenticAMD", 12)) {
         amd_CPUID_INFO2_free(&(p->info2.amd));
         amd_CPUID_INFO3_free(&(p->info3.amd));
@@ -55,6 +57,7 @@ void CPUID_INFO_fprintf(FILE * f, CPUID_INFO p)
         intel_CPUID_INFO2_fprintf(f, &(p->info2.intel));
         intel_CPUID_INFO3_fprintf(f, &(p->info3.intel));
         intel_CPUID_INFO4_fprintf(f, &(p->info4.intel));
+        intel_CPUID_INFO5_fprintf(f, &(p->info5.intel));
     } else if(!strncmp(p->info1.vendor, "AuthenticAMD", 12)) {
         amd_CPUID_INFO2_fprintf(f, &(p->info2.amd));
         amd_CPUID_INFO3_fprintf(f, &(p->info3.amd));

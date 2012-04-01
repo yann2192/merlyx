@@ -490,6 +490,41 @@ void intel_getCachesParameters(intel_EAX4 * res)
     } while(tmp != 0);
 }
 
+void intel_getProcessorTopology(intel_EAXB * res)
+{
+    unsigned int e[4];
+
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x0B),
+        "c" (0)
+       );
+
+    res->thread_apic_id = e[0] & 0x1F;
+    res->thread_cpu = e[1] & 0xFFFF;
+    res->thread_level_number = e[2] & 0xFF;
+    res->thread_level_type = (e[2] >> 8) & 0xFF;
+    res->thread_extended_apic = e[3];
+
+    asm("cpuid"
+        : "=a" (e[0]),
+        "=b" (e[1]),
+        "=c" (e[2]),
+        "=d" (e[3])
+        : "a" (0x0B),
+        "c" (1)
+       );
+
+    res->core_apic_id = e[0] & 0x1F;
+    res->core_cpu = e[1] & 0xFFFF;
+    res->core_level_number = e[2] & 0xFF;
+    res->core_level_type = (e[2] >> 8) & 0xFF;
+    res->core_extended_apic = e[3];
+}
+
 void intel_CPUID_INFO2_free(intel_EAX1 * res) {}
 
 void intel_CPUID_INFO3_free(intel_EAX2 * res) {}
@@ -504,6 +539,8 @@ void intel_CPUID_INFO4_free(intel_EAX4 * res)
         free(b);
     }
 }
+
+void intel_CPUID_INFO5_free(intel_EAXB * res) {}
 
 void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2)
 {
@@ -664,8 +701,24 @@ void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 * info4)
         fprintf(f, "Number of Sets  - 1                          : %d\n", current->nsets);
         fprintf(f, "WBINVD/INVD behavior on lower level caches   : %s\n", current->wbinvd ? "true" : "false");
         fprintf(f, "Cache is inclusive to lower cache levels     : %s\n", current->ciitlcl ? "true" : "false");
-        fprintf(f, "Complex Cache Indexing                       : %s\n", current->cci ? "true" : "false");
+        fprintf(f, "Complex Cache Indexing                       : %s\n\n", current->cci ? "true" : "false");
         current = current->next;
         ++i;
     }
+}
+
+void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB * info5)
+{
+    fprintf(f, "\n ------ Thread Level Processor Topology ------\n");
+    fprintf(f, "bits to shift APIC ID to get next                             : 0x%x\n", info5->thread_apic_id);
+    fprintf(f, "Number of factory-configured logical processors at this level : 0x%x\n", info5->thread_cpu);
+    fprintf(f, "Level type                                                    : 0x%x\n", info5->thread_level_type);
+    fprintf(f, "Level number                                                  : 0x%x\n", info5->thread_level_number);
+    fprintf(f, "Extended APIC ID                                              : 0x%x\n", info5->thread_extended_apic);
+    fprintf(f, "\n ------ Core Level Processor Topology ------\n");
+    fprintf(f, "bits to shift APIC ID to get next                             : 0x%x\n", info5->core_apic_id);
+    fprintf(f, "Number of factory-configured logical processors at this level : 0x%x\n", info5->core_cpu);
+    fprintf(f, "Level type                                                    : 0x%x\n", info5->core_level_type);
+    fprintf(f, "Level number                                                  : 0x%x\n", info5->core_level_number);
+    fprintf(f, "Extended APIC ID                                              : 0x%x\n", info5->core_extended_apic);
 }

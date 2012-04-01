@@ -113,11 +113,29 @@ struct intel_eax4
 };
 typedef struct intel_eax4 intel_EAX4;
 
+struct intel_eaxb
+{
+    unsigned int thread_apic_id;
+    unsigned int thread_cpu;
+    unsigned short thread_level_type;
+    unsigned short thread_level_number;
+    unsigned int thread_extended_apic;
+
+    unsigned int core_apic_id;
+    unsigned int core_cpu;
+    unsigned short core_level_type;
+    unsigned short core_level_number;
+    unsigned int core_extended_apic;
+};
+typedef struct intel_eaxb intel_EAXB;
+
 void intel_getProcessorInfo(intel_EAX1 *);
 
 void intel_getCachesInfo(intel_EAX2 *);
 
 void intel_getCachesParameters(intel_EAX4 *);
+
+void intel_getProcessorTopology(intel_EAXB *);
 
 void intel_CPUID_INFO2_free(intel_EAX1 *);
 
@@ -125,10 +143,14 @@ void intel_CPUID_INFO3_free(intel_EAX2 *);
 
 void intel_CPUID_INFO4_free(intel_EAX4 *);
 
+void intel_CPUID_INFO5_free(intel_EAXB *);
+
 void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 *);
 
 void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 *);
 
 void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 *);
+
+void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB *);
 
 #endif
