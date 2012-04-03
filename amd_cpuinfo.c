@@ -438,7 +438,7 @@ void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
 
 void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3)
 {
-    fprintf(f, " ------ L1 Cache and TLB Identifiers ------\n");
+    fprintf(f, "\n ------ L1 Cache and TLB Identifiers ------\n");
     fprintf(f, "Data TLB associativity for 2 MB and 4 MB pages : 0x%x\n", info3->L1DTlb2and4MAssoc);
     fprintf(f, "Data TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info3->L1DTlb2and4MSize);
     fprintf(f, "Instruction TLB associativity for 2 MB and 4 MB pages : 0x%x\n", info3->L1ITlb2and4MAssoc);
@@ -463,7 +463,7 @@ void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3)
 
 void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 * info4)
 {
-    fprintf(f, " ------ L2/L3 Cache and TLB Identifiers ------\n");
+    fprintf(f, "\n ------ L2/L3 Cache and TLB Identifiers ------\n");
     fprintf(f, "L2 data TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2DTlb2and4MAssoc);
     fprintf(f, "L2 data TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info4->L2DTlb2and4MSize);
     fprintf(f, "L2 instruction TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2ITlb2and4MAssoc);

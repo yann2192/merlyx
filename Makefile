@@ -9,10 +9,13 @@ C_FILES := $(wildcard *.c)
 OBJS := $(patsubst %.c, %.o, $(C_FILES))
 CC = gcc
 :q
-CFLAGS = -Wall -pedantic -pipe
-LDFLAGS =
+CFLAGS = -Wall -pipe -I./cuda
+LDFLAGS = -ldl
 
 all: $(PROGRAM)
+
+gpunvidia.o: gpunvidia.c gpunvidia.h
+	gcc -c gpunvidia.c -I./cuda -o gpunvidia.o
 
 $(PROGRAM): .depend $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(PROGRAM)

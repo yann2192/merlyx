@@ -5,6 +5,7 @@
 #include "network.h"
 #include "memory.h"
 #include "get_uname.h"
+#include "gpunvidia.h"
 
 
 void usage()
@@ -88,6 +89,12 @@ int main(int argc, char * argv[])
         info = CPUID_INFO_create();
         CPUID_INFO_fprintf(output, info);
         CPUID_INFO_free(info);
+        fprintf(output, "\n");
+    }
+    if(odefault || options[1])
+    {
+        fprintf(output, "------ GPU ------\n");
+        getNvidiaInfo(output);
         fprintf(output, "\n");
     }
     if(odefault || options[2])
