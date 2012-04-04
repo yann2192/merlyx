@@ -63,3 +63,11 @@ function enleverMachine($machines, $host){
 
 	return $machines;
 }
+
+function afficherMachines($machines){
+	echo '<div id="machines">';
+	for($i = 0; $i < count($machines); $i++){
+		echo $machines[$i][0].' - '.$machines[$i][1].' - ********<br />'; 
+	}
+	echo '</div>';
+}
