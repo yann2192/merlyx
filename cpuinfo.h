@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "output.h"
 #include "intel_cpuinfo.h"
 #include "amd_cpuinfo.h"
 
@@ -44,6 +45,6 @@ CPUID_INFO CPUID_INFO_create();
 
 void CPUID_INFO_free(CPUID_INFO p);
 
-void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info);
+void CPUID_INFO_fprintf(FILE * f, CPUID_INFO info, char html);
 
 #endif

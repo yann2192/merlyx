@@ -6,8 +6,9 @@
 #include <dlfcn.h>
 #include <cuda.h>
 #include <cuda_runtime_api.h>
+#include "output.h"
 
-void fprintf_nvidia(FILE * f, struct cudaDeviceProp * p);
-int getNvidiaInfo(FILE * f);
+void fprintf_nvidia(FILE * f, struct cudaDeviceProp * p, char html);
+int getNvidiaInfo(FILE * f, char html);
 
 #endif

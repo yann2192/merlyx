@@ -51,21 +51,22 @@ void CPUID_INFO_free(CPUID_INFO p)
     free(p);
 }
 
-void CPUID_INFO_fprintf(FILE * f, CPUID_INFO p)
+void CPUID_INFO_fprintf(FILE * f, CPUID_INFO p, char html)
 {
-    fprintf(f, "Largest Standard Function Number Supported : 0x%x\n", p->info1.lsfns);
-    fprintf(f, "Vendor                                     : %s\n\n", p->info1.vendor);
+    print(f, html, "Largest Standard Function Number Supported : 0x%x", p->info1.lsfns);
+    print(f, html, "Vendor                                     : %s", p->info1.vendor);
+    print_nl(f, html);
     if(!strncmp(p->info1.vendor, "GenuineIntel", 12)){
-        intel_CPUID_INFO2_fprintf(f, &(p->info2.intel));
-        intel_CPUID_INFO3_fprintf(f, &(p->info3.intel));
-        intel_CPUID_INFO4_fprintf(f, &(p->info4.intel));
-        intel_CPUID_INFO5_fprintf(f, &(p->info5.intel));
+        intel_CPUID_INFO2_fprintf(f, &(p->info2.intel), html);
+        intel_CPUID_INFO3_fprintf(f, &(p->info3.intel), html);
+        intel_CPUID_INFO4_fprintf(f, &(p->info4.intel), html);
+        intel_CPUID_INFO5_fprintf(f, &(p->info5.intel), html);
     } else if(!strncmp(p->info1.vendor, "AuthenticAMD", 12)) {
-        amd_CPUID_INFO2_fprintf(f, &(p->info2.amd));
-        amd_CPUID_INFO3_fprintf(f, &(p->info3.amd));
-        amd_CPUID_INFO4_fprintf(f, &(p->info4.amd));
-        amd_CPUID_INFO5_fprintf(f, &(p->info5.amd));
+        amd_CPUID_INFO2_fprintf(f, &(p->info2.amd), html);
+        amd_CPUID_INFO3_fprintf(f, &(p->info3.amd), html);
+        amd_CPUID_INFO4_fprintf(f, &(p->info4.amd), html);
+        amd_CPUID_INFO5_fprintf(f, &(p->info5.amd), html);
     } else {
-        fprintf(f, ">> unknown Processor !\n");
+        print(f, html, ">> unknown Processor !");
     }
 }

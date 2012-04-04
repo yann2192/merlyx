@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "output.h"
 
 struct intel_eax1
 {
@@ -145,12 +146,12 @@ void intel_CPUID_INFO4_free(intel_EAX4 *);
 
 void intel_CPUID_INFO5_free(intel_EAXB *);
 
-void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 *);
+void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 *, char);
 
-void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 *);
+void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 *, char);
 
-void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 *);
+void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 *, char);
 
-void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB *);
+void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB *, char);
 
 #endif

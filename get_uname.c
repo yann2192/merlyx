@@ -1,12 +1,12 @@
 #include "get_uname.h"
 
-void get_uname(FILE * f)
+void get_uname(FILE * f, char html)
 {
     struct utsname info;
 
     if(uname(&info) != 0) {
-        fprintf(f, "Fail get Kernel version ...\n");
+        print(f, html, "Fail get Kernel version ...");
     } else {
-        fprintf(f, "%s %s %s %s %s\n", info.sysname, info.nodename, info.release, info.version, info.machine);
+        print(f, html, "%s %s %s %s %s", info.sysname, info.nodename, info.release, info.version, info.machine);
     }
 }

@@ -6,6 +6,7 @@
 #include "memory.h"
 #include "get_uname.h"
 #include "gpunvidia.h"
+#include "output.h"
 
 
 void usage()
@@ -78,37 +79,34 @@ int main(int argc, char * argv[])
         usage();
         exit(0);
     }
+    init_output(output, options[4]);
     if(odefault || options[7])
     {
-        get_uname(output);
-        fprintf(output, "\n");
+        get_uname(output, options[4]);
     }
     if(odefault || options[0])
     {
-        fprintf(output, "------ CPU ------\n");
+        print_title(output, options[4], "CPU");
         info = CPUID_INFO_create();
-        CPUID_INFO_fprintf(output, info);
+        CPUID_INFO_fprintf(output, info, options[4]);
         CPUID_INFO_free(info);
-        fprintf(output, "\n");
     }
     if(odefault || options[1])
     {
-        fprintf(output, "------ GPU ------\n");
-        getNvidiaInfo(output);
-        fprintf(output, "\n");
+        print_title(output, options[4], "GPU");
+        getNvidiaInfo(output, options[4]);
     }
     if(odefault || options[2])
     {
-        fprintf(output, "------ Memory ------\n");
-        memory_usage(output);
-        fprintf(output, "\n");
+        print_title(output, options[4], "Memory");
+        memory_usage(output, options[4]);
     }
     if(odefault || options[3])
     {
-        fprintf(output, "------ Network ------\n");
-        interfaces(output);
-        fprintf(output, "\n");
+        print_title(output, options[4], "Network");
+        interfaces(output, options[4]);
     }
+    end_output(output, options[4]);
     if(options[6]) fclose(output);
 
     return 0;

@@ -3,7 +3,7 @@
 #define inaddrr(x) (*(struct in_addr *) &ifr->x[sizeof sa.sin_port])
 #define IFRSIZE ((int)(size * sizeof (struct ifreq)))
 
-void interfaces(FILE * f)
+void interfaces(FILE * f, char html)
 {
     unsigned char *u;
     int sockfd, size = 1;
@@ -13,7 +13,7 @@ void interfaces(FILE * f)
 
 
     if(0 > (sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP))) {
-        fprintf(f, "Error : cannot open socket\n");
+        print(f, html, "Error : cannot open socket");
         return;
     }
 
@@ -23,12 +23,12 @@ void interfaces(FILE * f)
     do {
         ++size;
         if(NULL == (ifc.ifc_req = realloc(ifc.ifc_req, IFRSIZE))) {
-            fprintf(f, "Error : out of memory\n");
+            print(f, html, "Error : out of memory");
             return;
         }
         ifc.ifc_len = IFRSIZE;
         if(ioctl(sockfd, SIOCGIFCONF, &ifc)) {
-            fprintf(f, "Error : ioctl SIOCFIFCONF\n");
+            print(f, html, "Error : ioctl SIOCFIFCONF");
             return;
         }
     } while(IFRSIZE <= ifc.ifc_len);
@@ -40,31 +40,31 @@ void interfaces(FILE * f)
             continue; /* erreur */
         }
 
-        fprintf(f, "Interface: %s\n", ifr->ifr_name);
-        fprintf(f, "IP Address: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+        print(f, html, "Interface: %s", ifr->ifr_name);
+        print(f, html, "IP Address: %s", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
         if(!ioctl(sockfd, SIOCGIFHWADDR, ifr)) {
             if(ifr->ifr_hwaddr.sa_family == ARPHRD_ETHER){
                 u = (unsigned char *) &ifr->ifr_addr.sa_data;
 
                 if(u[0] + u[1] + u[2] + u[3] + u[4] + u[5])
-                    fprintf(f, "HW Address: %2.2x.%2.2x.%2.2x.%2.2x.%2.2x.%2.2x\n", u[0], u[1], u[2], u[3], u[4], u[5]);
+                    print(f, html, "HW Address: %2.2x.%2.2x.%2.2x.%2.2x.%2.2x.%2.2x", u[0], u[1], u[2], u[3], u[4], u[5]);
 
                 if(!ioctl(sockfd, SIOCGIFNETMASK, ifr))
-                    fprintf(f, "Netmask: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+                    print(f, html, "Netmask: %s", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
                 if(ifr->ifr_flags & IFF_BROADCAST)
                     if(!ioctl(sockfd, SIOCGIFBRDADDR, ifr))
-                        fprintf(f, "Broadcast: %s\n", inet_ntoa(inaddrr(ifr_addr.sa_data)));
+                        print(f, html, "Broadcast: %s", inet_ntoa(inaddrr(ifr_addr.sa_data)));
 
                 if(!ioctl(sockfd, SIOCGIFMTU, ifr))
-                    fprintf(f, "MTU: %u\n", ifr->ifr_mtu);
+                    print(f, html, "MTU: %u", ifr->ifr_mtu);
 
                 if(!ioctl(sockfd, SIOCGIFMETRIC, ifr))
-                    fprintf(f, "Metric: %u\n", ifr->ifr_metric);
+                    print(f, html, "Metric: %u", ifr->ifr_metric);
             }
         }
-        fprintf(f, "\n");
+        print_nl(f, html);
     }
     close(sockfd);
 

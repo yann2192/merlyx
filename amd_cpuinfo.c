@@ -345,149 +345,149 @@ void amd_CPUID_INFO4_free(amd_EAX4 * res) {}
 
 void amd_CPUID_INFO5_free(amd_EAXB * res) {}
 
-void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2)
+void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 * info2, char html)
 {
     int a = 0;
 
-    fprintf(f, "Processor Brand String                     : %s\n", info2->cpuname);
-    fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
-    fprintf(f, "Model                                      : 0x%x\n", info2->model);
-    fprintf(f, "Family                                     : 0x%x\n", info2->family);
-    fprintf(f, "Extended model                             : 0x%x\n", info2->extendedmodel);
-    fprintf(f, "Extended family                            : 0x%x\n\n", info2->extendedfamily);
+    print(f, html, "Processor Brand String                     : %s", info2->cpuname);
+    print(f, html, "Stepping                                   : 0x%x", info2->stepping);
+    print(f, html, "Model                                      : 0x%x", info2->model);
+    print(f, html, "Family                                     : 0x%x", info2->family);
+    print(f, html, "Extended model                             : 0x%x", info2->extendedmodel);
+    print(f, html, "Extended family                            : 0x%x", info2->extendedfamily);
+    print_nl(f, html);
+    print(f, html, "Brand ID                                   : 0x%x", info2->brand_id);
+    print(f, html, "Chunks                                     : 0x%x", info2->chunks);
+    print(f, html, "Logical Processor Count                    : 0x%x (%d)", info2->count, info2->count);
+    print(f, html, "APIC ID                                    : 0x%x", info2->apic_id);
 
-    fprintf(f, "Brand ID                : 0x%x\n", info2->brand_id);
-    fprintf(f, "Chunks                  : 0x%x\n", info2->chunks);
-    fprintf(f, "Logical Processor Count : 0x%x (%d)\n", info2->count, info2->count);
-    fprintf(f, "APIC ID                 : 0x%x\n\n", info2->apic_id);
-
-    fprintf(f, "Features supported :\n");
+    print_title(f, html, "Features supported");
 
     if(info2->sse3){ fprintf(f, "SSE3 "); ++a; }
     if(info2->pclmuldq){ fprintf(f, "PCLMULDQ "); ++a; }
     if(info2->monitor){ fprintf(f, "MONITOR "); ++a; }
     if(info2->ssse3){ fprintf(f, "SSSE3 "); ++a; }
     if(info2->fma){ fprintf(f, "FMA "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cx16){ fprintf(f, "CX16 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse41){ fprintf(f, "SSE4.1 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse42){ fprintf(f, "SSE4.2 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->popcnt){ fprintf(f, "POPCNT "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->aes){ fprintf(f, "AES "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->xsave){ fprintf(f, "XSAVE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->osxsave){ fprintf(f, "OSXSAVE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->avx){ fprintf(f, "AVX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->f16c){ fprintf(f, "F16C "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
 
     if(info2->fpu){ fprintf(f, "FPU "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->vme){ fprintf(f, "VME "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->de){ fprintf(f, "DE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pse){ fprintf(f, "PSE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->tsc){ fprintf(f, "TSC "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->msr){ fprintf(f, "MSR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pae){ fprintf(f, "PAE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mce){ fprintf(f, "MCE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cx8){ fprintf(f, "CX8 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->apic){ fprintf(f, "APIC "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sep){ fprintf(f, "SEP "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mtrr){ fprintf(f, "MTRR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pge){ fprintf(f, "PGE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mca){ fprintf(f, "MCA "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cmov){ fprintf(f, "CMOV "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pat){ fprintf(f, "PAT "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pse_36){ fprintf(f, "PSE-36 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->clfsh){ fprintf(f, "CLFSH "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mmx){ fprintf(f, "MMX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->fxsr){ fprintf(f, "FXSR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse){ fprintf(f, "SSE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse2){ fprintf(f, "SSE2 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->htt){ fprintf(f, "HTT "); ++a; }
-    fprintf(f, "\n");
+    print_nl(f, html);
 }
 
-void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3)
+void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 * info3, char html)
 {
-    fprintf(f, "\n ------ L1 Cache and TLB Identifiers ------\n");
-    fprintf(f, "Data TLB associativity for 2 MB and 4 MB pages : 0x%x\n", info3->L1DTlb2and4MAssoc);
-    fprintf(f, "Data TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info3->L1DTlb2and4MSize);
-    fprintf(f, "Instruction TLB associativity for 2 MB and 4 MB pages : 0x%x\n", info3->L1ITlb2and4MAssoc);
-    fprintf(f, "Instruction TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info3->L1ITlb2and4MSize);
-    fprintf(f, "\n");
-    fprintf(f, "Data TLB associativity for 4 KB pages : 0x%x\n", info3->L1DTlb4KAssoc);
-    fprintf(f, "Data TLB number of entries for 4 KB pages : 0x%x\n", info3->L1DTlb4KSize);
-    fprintf(f, "Instruction TLB associativity for 4 KB pages : 0x%x\n", info3->L1ITlb4KAssoc);
-    fprintf(f, "Instruction TLB number of entries for 4 KB pages : 0x%x\n", info3->L1ITlb4KSize);
-    fprintf(f, "\n");
-    fprintf(f, "L1 data cache size in KB : 0x%x\n", info3->L1DcSize);
-    fprintf(f, "L1 data cache associativity : 0x%x\n", info3->L1DcAssoc);
-    fprintf(f, "L1 data cache lines per tag : 0x%x\n", info3->L1DcLinesPerTag);
-    fprintf(f, "L1 data cache line size in bytes : 0x%x\n", info3->L1DcLineSize);
-    fprintf(f, "\n");
-    fprintf(f, "L1 instruction cache size KB : 0x%x\n", info3->L1IcSize);
-    fprintf(f, "L1 instruction cache associativity : 0x%x\n", info3->L1IcAssoc);
-    fprintf(f, "L1 instruction cache lines per tag : 0x%x\n", info3->L1IcLinesPerTag);
-    fprintf(f, "L1 instruction cache line size in bytes : 0x%x\n", info3->L1IcLineSize);
-    fprintf(f, "\n");
+    print_title(f, html, "L1 Cache and TLB Identifiers");
+    print(f, html, "Data TLB associativity for 2 MB and 4 MB pages            : 0x%x", info3->L1DTlb2and4MAssoc);
+    print(f, html, "Data TLB number of entries for 2 MB and 4 MB pages        : 0x%x", info3->L1DTlb2and4MSize);
+    print(f, html, "Instruction TLB associativity for 2 MB and 4 MB pages     : 0x%x", info3->L1ITlb2and4MAssoc);
+    print(f, html, "Instruction TLB number of entries for 2 MB and 4 MB pages : 0x%x", info3->L1ITlb2and4MSize);
+    print_nl(f, html);
+    print(f, html, "Data TLB associativity for 4 KB pages                     : 0x%x", info3->L1DTlb4KAssoc);
+    print(f, html, "Data TLB number of entries for 4 KB pages                 : 0x%x", info3->L1DTlb4KSize);
+    print(f, html, "Instruction TLB associativity for 4 KB pages              : 0x%x", info3->L1ITlb4KAssoc);
+    print(f, html, "Instruction TLB number of entries for 4 KB pages          : 0x%x", info3->L1ITlb4KSize);
+    print_nl(f, html);
+    print(f, html, "L1 data cache size in KB                                  : %d", info3->L1DcSize);
+    print(f, html, "L1 data cache associativity                               : 0x%x", info3->L1DcAssoc);
+    print(f, html, "L1 data cache lines per tag                               : 0x%x", info3->L1DcLinesPerTag);
+    print(f, html, "L1 data cache line size in bytes                          : 0x%x", info3->L1DcLineSize);
+    print_nl(f, html);
+    print(f, html, "L1 instruction cache size KB                              : %d", info3->L1IcSize);
+    print(f, html, "L1 instruction cache associativity                        : 0x%x", info3->L1IcAssoc);
+    print(f, html, "L1 instruction cache lines per tag                        : 0x%x", info3->L1IcLinesPerTag);
+    print(f, html, "L1 instruction cache line size in bytes                   : 0x%x", info3->L1IcLineSize);
+    print_nl(f, html);
 }
 
-void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 * info4)
+void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 * info4, char html)
 {
-    fprintf(f, "\n ------ L2/L3 Cache and TLB Identifiers ------\n");
-    fprintf(f, "L2 data TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2DTlb2and4MAssoc);
-    fprintf(f, "L2 data TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info4->L2DTlb2and4MSize);
-    fprintf(f, "L2 instruction TLB associativity for 2 MB and 4 MB pages : %s\n", info4->L2ITlb2and4MAssoc);
-    fprintf(f, "L2 instruction TLB number of entries for 2 MB and 4 MB pages : 0x%x\n", info4->L2ITlb2and4MSize);
-    fprintf(f, "\n");
-    fprintf(f, "L2 data TLB associativity for 4 KB pages : %s\n", info4->L2DTlb4KAssoc);
-    fprintf(f, "L2 data TLB number of entries for 4 KB pages : 0x%x\n", info4->L2DTlb4KSize);
-    fprintf(f, "L2 instruction TLB associativity for 4 KB pages : %s\n", info4->L2ITlb4KAssoc);
-    fprintf(f, "L2 instruction TLB number of entries for 4 KB pages : 0x%x\n", info4->L2ITlb4KSize);
-    fprintf(f, "\n");
-    fprintf(f, "L2 cache size in KB : 0x%x\n", info4->L2Size);
-    fprintf(f, "L2 cache associativity : %s\n", info4->L2Assoc);
-    fprintf(f, "L2 cache lines per tag : 0x%x\n", info4->L2LinesPerTag);
-    fprintf(f, "L2 cache line size in bytes : 0x%x\n", info4->L2LineSize);
-    fprintf(f, "\n");
-    fprintf(f, "L3 cache size in KB : 0x%x\n", info4->L3Size);
-    fprintf(f, "L3 cache associativity : %s\n", info4->L3Assoc);
-    fprintf(f, "L3 cache lines per tag : 0x%x\n", info4->L3LinesPerTag);
-    fprintf(f, "L3 cache line size in bytes : 0x%x\n", info4->L3LineSize);
-    fprintf(f, "\n");
+    print_title(f, html, "L2/L3 Cache and TLB Identifiers");
+    print(f, html, "L2 data TLB associativity for 2 MB and 4 MB pages            : %s", info4->L2DTlb2and4MAssoc);
+    print(f, html, "L2 data TLB number of entries for 2 MB and 4 MB pages        : 0x%x", info4->L2DTlb2and4MSize);
+    print(f, html, "L2 instruction TLB associativity for 2 MB and 4 MB pages     : %s", info4->L2ITlb2and4MAssoc);
+    print(f, html, "L2 instruction TLB number of entries for 2 MB and 4 MB pages : 0x%x", info4->L2ITlb2and4MSize);
+    print_nl(f, html);
+    print(f, html, "L2 data TLB associativity for 4 KB pages                     : %s", info4->L2DTlb4KAssoc);
+    print(f, html, "L2 data TLB number of entries for 4 KB pages                 : 0x%x", info4->L2DTlb4KSize);
+    print(f, html, "L2 instruction TLB associativity for 4 KB pages              : %s", info4->L2ITlb4KAssoc);
+    print(f, html, "L2 instruction TLB number of entries for 4 KB pages          : 0x%x", info4->L2ITlb4KSize);
+    print_nl(f, html);
+    print(f, html, "L2 cache size in KB                                          : %d", info4->L2Size);
+    print(f, html, "L2 cache associativity                                       : %s", info4->L2Assoc);
+    print(f, html, "L2 cache lines per tag                                       : 0x%x", info4->L2LinesPerTag);
+    print(f, html, "L2 cache line size in bytes                                  : 0x%x", info4->L2LineSize);
+    print_nl(f, html);
+    print(f, html, "L3 cache size in 512KB                                       : %d", info4->L3Size);
+    print(f, html, "L3 cache associativity                                       : %s", info4->L3Assoc);
+    print(f, html, "L3 cache lines per tag                                       : 0x%x", info4->L3LinesPerTag);
+    print(f, html, "L3 cache line size in bytes                                  : 0x%x", info4->L3LineSize);
+    print_nl(f, html);
 }
 
-void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB * info5)
+void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB * info5, char html)
 {
-    fprintf(f, "Number of physical cores : %d\n", info5->cpu_count);
-    fprintf(f, "\n");
+    print(f, html, "Number of physical cores : %d", info5->cpu_count);
+    print_nl(f, html);
 }

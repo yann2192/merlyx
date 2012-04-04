@@ -542,183 +542,185 @@ void intel_CPUID_INFO4_free(intel_EAX4 * res)
 
 void intel_CPUID_INFO5_free(intel_EAXB * res) {}
 
-void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2)
+void intel_CPUID_INFO2_fprintf(FILE * f, intel_EAX1 * info2, char html)
 {
     int a = 0;
 
-    fprintf(f, "Processor Brand String                     : %s\n", info2->cpuname);
-    fprintf(f, "Stepping                                   : 0x%x\n", info2->stepping);
-    fprintf(f, "Model                                      : 0x%x\n", info2->model);
-    fprintf(f, "Family                                     : 0x%x\n", info2->family);
-    fprintf(f, "Processor type                             : %s\n", info2->cputype);
-    fprintf(f, "Extended model                             : 0x%x\n", info2->extendedmodel);
-    fprintf(f, "Extended family                            : 0x%x\n\n", info2->extendedfamily);
+    print(f, html, "Processor Brand String                     : %s", info2->cpuname);
+    print(f, html, "Stepping                                   : 0x%x", info2->stepping);
+    print(f, html, "Model                                      : 0x%x", info2->model);
+    print(f, html, "Family                                     : 0x%x", info2->family);
+    print(f, html, "Processor type                             : %s", info2->cputype);
+    print(f, html, "Extended model                             : 0x%x", info2->extendedmodel);
+    print(f, html, "Extended family                            : 0x%x", info2->extendedfamily);
+    print_nl(f, html);
 
-    fprintf(f, "Brand ID                : 0x%x\n", info2->brand_id);
-    fprintf(f, "Chunks                  : 0x%x\n", info2->chunks);
-    fprintf(f, "Logical Processor Count : 0x%x (%d)\n", info2->count, info2->count);
-    fprintf(f, "APIC ID                 : 0x%x\n\n", info2->apic_id);
+    print(f, html, "Brand ID                                   : 0x%x", info2->brand_id);
+    print(f, html, "Chunks                                     : 0x%x", info2->chunks);
+    print(f, html, "Logical Processor Count                    : 0x%x (%d)", info2->count, info2->count);
+    print(f, html, "APIC ID                                    : 0x%x", info2->apic_id);
 
-    fprintf(f, "Features supported :\n");
+    print_title(f, html, "Features supported");
 
     if(info2->sse3){ fprintf(f, "SSE3 "); ++a; }
     if(info2->pclmuldq){ fprintf(f, "PCLMULDQ "); ++a; }
     if(info2->dtes64){ fprintf(f, "DTES64 "); ++a; }
     if(info2->monitor){ fprintf(f, "MONITOR "); ++a; }
     if(info2->ds_cpl){ fprintf(f, "DS-CPL "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->vmx){ fprintf(f, "VMX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->smx){ fprintf(f, "SMX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->eist){ fprintf(f, "EIST "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->tm2){ fprintf(f, "TM2 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->ssse3){ fprintf(f, "SSSE3 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cnxt_id){ fprintf(f, "CNXT-ID "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->fma){ fprintf(f, "FMA "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cx16){ fprintf(f, "CX16 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->xtpr){ fprintf(f, "XTPR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pdcm){ fprintf(f, "PDCM "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pcid){ fprintf(f, "PCID "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->dca){ fprintf(f, "DCA "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse41){ fprintf(f, "SSE4.1 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse42){ fprintf(f, "SSE4.2 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->x2apic){ fprintf(f, "x2APIC "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->movbe){ fprintf(f, "MOVBE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->popcnt){ fprintf(f, "POPCNT "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->tsc_deadline){ fprintf(f, "TSC-DEADLINE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->aes){ fprintf(f, "AES "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->xsave){ fprintf(f, "XSAVE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->osxsave){ fprintf(f, "OSXSAVE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->avx){ fprintf(f, "AVX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
 
     if(info2->fpu){ fprintf(f, "FPU "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->vme){ fprintf(f, "VME "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->de){ fprintf(f, "DE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pse){ fprintf(f, "PSE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->tsc){ fprintf(f, "TSC "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->msr){ fprintf(f, "MSR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pae){ fprintf(f, "PAE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mce){ fprintf(f, "MCE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cx8){ fprintf(f, "CX8 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->apic){ fprintf(f, "APIC "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sep){ fprintf(f, "SEP "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mtrr){ fprintf(f, "MTRR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pge){ fprintf(f, "PGE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mca){ fprintf(f, "MCA "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->cmov){ fprintf(f, "CMOV "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pat){ fprintf(f, "PAT "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pse_36){ fprintf(f, "PSE-36 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->psn){ fprintf(f, "PSN "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->clfsh){ fprintf(f, "CLFSH "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->ds){ fprintf(f, "DS "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->acpi){ fprintf(f, "ACPI "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->mmx){ fprintf(f, "MMX "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->fxsr){ fprintf(f, "FXSR "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse){ fprintf(f, "SSE "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->sse2){ fprintf(f, "SSE2 "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->ss){ fprintf(f, "SS "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->htt){ fprintf(f, "HTT "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->tm){ fprintf(f, "TM "); ++a; }
-    if(a >= 5){ fprintf(f, "\n"); a = 0; }
+    if(a >= 5){ print_nl(f, html); a = 0; }
     if(info2->pbe){ fprintf(f, "PBE "); ++a; }
-    fprintf(f, "\n");
+    print_nl(f, html);
 }
 
-void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 * info3)
+void intel_CPUID_INFO3_fprintf(FILE * f, intel_EAX2 * info3, char html)
 {
     int i;
-    fprintf(f, "\nCaches and TLB descriptor :\n");
+    print_title(f, html, "Caches and TLB descriptor");
     for(i=0; i < 15; ++i)
         if(info3->caches[i])
-            fprintf(f, "     %s\n", info3->caches[i]);
+            print(f, html, "%s", info3->caches[i]);
 }
 
-void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 * info4)
+void intel_CPUID_INFO4_fprintf(FILE * f, intel_EAX4 * info4, char html)
 {
     int i=0;
     intel_EAX4 * current = info4;
-    fprintf(f, "\n");
+    print_nl(f, html);
     while(current != NULL) {
-        fprintf(f, " ------ Cache level : %d ------\n", current->cache_level);
-        fprintf(f, "Cache type                                   : %s\n", current->cache_type);
-        fprintf(f, "Cache level                                  : 0x%x\n", current->cache_level);
-        fprintf(f, "Cache size                                   : %dK\n", current->cache_size/1024);
-        fprintf(f, "Self initializing cache level                : %s\n", current->sicl ? "true" : "false");
-        fprintf(f, "Fully associative cache                      : %s\n", current->fac ? "true" : "false");
-        fprintf(f, "Maximum number of threads sharing this cache : %d\n", current->mntstc);
-        fprintf(f, "Number of APIC IDs reserved for this package : %d\n", current->napicidrtp);
-        fprintf(f, "System Coherency Line Size                   : %d\n", current->scls);
-        fprintf(f, "Physical Line partitions                     : %d\n", current->plp);
-        fprintf(f, "Ways of Associativity                        : %d\n", current->woa);
-        fprintf(f, "Number of Sets  - 1                          : %d\n", current->nsets);
-        fprintf(f, "WBINVD/INVD behavior on lower level caches   : %s\n", current->wbinvd ? "true" : "false");
-        fprintf(f, "Cache is inclusive to lower cache levels     : %s\n", current->ciitlcl ? "true" : "false");
-        fprintf(f, "Complex Cache Indexing                       : %s\n\n", current->cci ? "true" : "false");
+        print_title(f, html, "Cache level : %d", current->cache_level);
+        print(f, html, "Cache type                                   : %s", current->cache_type);
+        print(f, html, "Cache level                                  : 0x%x", current->cache_level);
+        print(f, html, "Cache size                                   : %dK", current->cache_size/1024);
+        print(f, html, "Self initializing cache level                : %s", current->sicl ? "true" : "false");
+        print(f, html, "Fully associative cache                      : %s", current->fac ? "true" : "false");
+        print(f, html, "Maximum number of threads sharing this cache : %d", current->mntstc);
+        print(f, html, "Number of APIC IDs reserved for this package : %d", current->napicidrtp);
+        print(f, html, "System Coherency Line Size                   : %d", current->scls);
+        print(f, html, "Physical Line partitions                     : %d", current->plp);
+        print(f, html, "Ways of Associativity                        : %d", current->woa);
+        print(f, html, "Number of Sets  - 1                          : %d", current->nsets);
+        print(f, html, "WBINVD/INVD behavior on lower level caches   : %s", current->wbinvd ? "true" : "false");
+        print(f, html, "Cache is inclusive to lower cache levels     : %s", current->ciitlcl ? "true" : "false");
+        print(f, html, "Complex Cache Indexing                       : %s", current->cci ? "true" : "false");
+        print_nl(f, html);
         current = current->next;
         ++i;
     }
 }
 
-void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB * info5)
+void intel_CPUID_INFO5_fprintf(FILE * f, intel_EAXB * info5, char html)
 {
-    fprintf(f, "\n ------ Thread Level Processor Topology ------\n");
-    fprintf(f, "bits to shift APIC ID to get next                             : 0x%x\n", info5->thread_apic_id);
-    fprintf(f, "Number of factory-configured logical processors at this level : 0x%x\n", info5->thread_cpu);
-    fprintf(f, "Level type                                                    : 0x%x\n", info5->thread_level_type);
-    fprintf(f, "Level number                                                  : 0x%x\n", info5->thread_level_number);
-    fprintf(f, "Extended APIC ID                                              : 0x%x\n", info5->thread_extended_apic);
-    fprintf(f, "\n ------ Core Level Processor Topology ------\n");
-    fprintf(f, "bits to shift APIC ID to get next                             : 0x%x\n", info5->core_apic_id);
-    fprintf(f, "Number of factory-configured logical processors at this level : 0x%x\n", info5->core_cpu);
-    fprintf(f, "Level type                                                    : 0x%x\n", info5->core_level_type);
-    fprintf(f, "Level number                                                  : 0x%x\n", info5->core_level_number);
-    fprintf(f, "Extended APIC ID                                              : 0x%x\n", info5->core_extended_apic);
+    print_title(f, html, "Thread Level Processor Topology");
+    print(f, html, "bits to shift APIC ID to get next                             : 0x%x", info5->thread_apic_id);
+    print(f, html, "Number of factory-configured logical processors at this level : 0x%x", info5->thread_cpu);
+    print(f, html, "Level type                                                    : 0x%x", info5->thread_level_type);
+    print(f, html, "Level number                                                  : 0x%x", info5->thread_level_number);
+    print(f, html, "Extended APIC ID                                              : 0x%x", info5->thread_extended_apic);
+    print_title(f, html, "Core Level Processor Topology");
+    print(f, html, "bits to shift APIC ID to get next                             : 0x%x", info5->core_apic_id);
+    print(f, html, "Number of factory-configured logical processors at this level : 0x%x", info5->core_cpu);
+    print(f, html, "Level type                                                    : 0x%x", info5->core_level_type);
+    print(f, html, "Level number                                                  : 0x%x", info5->core_level_number);
+    print(f, html, "Extended APIC ID                                              : 0x%x", info5->core_extended_apic);
 }

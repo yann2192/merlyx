@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "output.h"
 
 struct amd_eax1
 {
@@ -133,12 +134,12 @@ void amd_CPUID_INFO4_free(amd_EAX4 *);
 
 void amd_CPUID_INFO5_free(amd_EAXB *);
 
-void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 *);
+void amd_CPUID_INFO2_fprintf(FILE * f, amd_EAX1 *, char html);
 
-void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 *);
+void amd_CPUID_INFO3_fprintf(FILE * f, amd_EAX2 *, char html);
 
-void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 *);
+void amd_CPUID_INFO4_fprintf(FILE * f, amd_EAX4 *, char html);
 
-void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB *);
+void amd_CPUID_INFO5_fprintf(FILE * f, amd_EAXB *, char html);
 
 #endif

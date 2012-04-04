@@ -11,7 +11,8 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <arpa/inet.h>
+#include "output.h"
 
-void interfaces(FILE * f);
+void interfaces(FILE * f, char html);
 
 #endif
