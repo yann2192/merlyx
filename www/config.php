@@ -1,7 +1,5 @@
 <?php
 $merlyxPath="./merlyx-code";
 $exeName="merlyx";
-$connexionType="ssh";
-$defaultUser="yann.guibet";
-$defaultPass="cgfhx";
+$rsaPath="/home/xxxx/.ssh/id_rsa";
 ?>
